@@ -17,7 +17,7 @@ CREATE TABLE Corso (
 
 CREATE TABLE Utente (
 	ID int NOT NULL AUTO_INCREMENT,
-	Email varchar(30) NOT NULL,
+	Email varchar(30) NOT NULL UNIQUE,
 	Password varchar(50) NOT NULL,
 	Nome varchar(30) NOT NULL,
     Cogonome varchar(30) NOT NULL,

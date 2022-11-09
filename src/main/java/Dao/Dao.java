@@ -242,7 +242,7 @@ public class Dao {
 
     }
 
-    public void updateStelle(int id,String stelle){
+    public void updateStelle(int id,int stelle){
         Connection con = null;
 
         try {
@@ -250,7 +250,7 @@ public class Dao {
 
 
             PreparedStatement prs = con.prepareStatement("UPDATE `utente` SET `Stelle` = ? WHERE `utente`.`ID` = ?;");
-            prs.setString(1,stelle);
+            prs.setString(1,Integer.toString(stelle));
             prs.setInt(2,id);
 
 
