@@ -208,6 +208,74 @@ public class Dao {
 
     }
 
+    public void addFoto(int id,String foto_path){
+        Connection con = null;
+
+        try {
+            con = Dao.getConnection();
+
+
+            PreparedStatement prs = con.prepareStatement("UPDATE `utente` SET `PF` = ? WHERE `utente`.`ID` = ?;");
+            prs.setString(1,foto_path);
+            prs.setInt(2,id);
+
+
+
+            prs.executeUpdate();
+
+
+            System.out.println("Successful Update");
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+
+
+        }
+
+
+    }
+
+    public void updateStelle(int id,String stelle){
+        Connection con = null;
+
+        try {
+            con = Dao.getConnection();
+
+
+            PreparedStatement prs = con.prepareStatement("UPDATE `utente` SET `Stelle` = ? WHERE `utente`.`ID` = ?;");
+            prs.setString(1,stelle);
+            prs.setInt(2,id);
+
+
+
+            prs.executeUpdate();
+
+
+            System.out.println("Successful Update");
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+
+
+        }
+
+
+    }
+
 
     //Utente--------------------------------------------------------------------
 
@@ -399,7 +467,7 @@ public class Dao {
             con = Dao.getConnection();
 
 
-            PreparedStatement prs = con.prepareStatement("DELETE FROM  lezione WHERE Docente_ID=? AND Ora= ? AND Data = ?  ");
+            PreparedStatement prs = con.prepareStatement("DELETE FROM  lezione WHERE Docente_ID=? AND Ora= ? AND Data = ? ; ");
             prs.setInt(1,docente);
             prs.setString(2,ora);
             prs.setString(3,data);
@@ -424,6 +492,78 @@ public class Dao {
         }
 
     }
+
+    public static void prenotaLezione(String data,String ora,int Docente_ID,int Utente_ID){
+        Connection con = null;
+
+        try {
+            con = Dao.getConnection();
+
+
+            PreparedStatement prs = con.prepareStatement("UPDATE `lezione` SET `Utente_ID` =? , `Stato` = 'Prenotata' WHERE `lezione`.`Data` = ? AND `lezione`.`Ora` = ? AND `lezione`.`Docente_ID` = ?;");
+            prs.setInt(1,Utente_ID);
+            prs.setString(2,data);
+            prs.setString(3,ora);
+            prs.setInt(4,Docente_ID);
+
+
+            prs.executeUpdate();
+
+
+            System.out.println("Successful Prenotazione");
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+
+
+        }
+
+
+
+    }
+
+    public static void annullaPrenotazione(String data,String ora,int Docente_ID){
+        Connection con = null;
+
+        try {
+            con = Dao.getConnection();
+
+
+            PreparedStatement prs = con.prepareStatement("UPDATE `lezione` SET `Utente_ID` = '0' , `Stato` = 'Libera' WHERE `lezione`.`Data` = ? AND `lezione`.`Ora` = ? AND `lezione`.`Docente_ID` = ?;");
+            prs.setString(1,data);
+            prs.setString(2,ora);
+            prs.setInt(3,Docente_ID);
+
+
+            prs.executeUpdate();
+
+
+            System.out.println("Successful Prenotazione");
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+
+
+        }
+
+
+
+    }
+
 
 
     //Lezione-----------------------------------------------------

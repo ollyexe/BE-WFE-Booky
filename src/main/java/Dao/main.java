@@ -14,7 +14,7 @@ public class main {
 
 
 
-        dao.deleteLezione("2022-11-09","17:41:42",5);
+        dao.annullaPrenotazione("2022-11-09","11:00:00",5);
         for(Lezione x : dao.dumpTableLezione()){
             System.out.println(x.toString());
         }

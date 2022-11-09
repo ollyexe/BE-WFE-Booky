@@ -38,7 +38,7 @@ CREATE TABLE Lezione (
     Stato enum('Libera', 'Conclusa', 'Prenotata') NOT NULL ,
 	Corso_ID int NOT NULL,
     Docente_ID int NOT NULL,
-    Utente_ID int NOT NULL,
+    Utente_ID int DEFAULT '0' NOT NULL ,
 
 
 
