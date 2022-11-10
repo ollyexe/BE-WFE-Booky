@@ -5,14 +5,14 @@
          version="5.0">
     <context-param>
         <param-name>dbURL</param-name>
-        <param-value>jdbc:mysql://127.0.0.1:3306/test</param-value>
+        <param-value>jdbc:mysql://localhost:3306/db_book</param-value>
     </context-param>
     <context-param>
         <param-name>dbUser</param-name>
-        <param-value>olly</param-value>
+        <param-value>dbhelper</param-value>
     </context-param>
     <context-param>
         <param-name>dbUserPass</param-name>
-        <param-value>admin</param-value>
+        <param-value>73C88AAFCFC9701657356F643382EBE40E2B8660C</param-value>
     </context-param>
 </web-app>

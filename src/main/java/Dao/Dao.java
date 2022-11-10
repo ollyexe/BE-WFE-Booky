@@ -102,7 +102,7 @@ public class Dao {
     }
 
 
-    public static Utente getUtente(int ID){
+    public static Utente getUtente(String mail){
         Connection con = null;
         Utente u = null;
 
@@ -110,8 +110,8 @@ public class Dao {
             con = Dao.getConnection();
 
 
-            PreparedStatement prs = con.prepareStatement("SELECT * FROM utente Where ID = ?");
-            prs.setInt(1, ID);
+            PreparedStatement prs = con.prepareStatement("SELECT * FROM utente Where Email = ? ;");
+            prs.setString(1, mail);
 
 
             ResultSet rs = prs.executeQuery();
@@ -120,7 +120,7 @@ public class Dao {
                  u = new Utente(rs.getInt("ID"), rs.getString("Email"), rs.getString("Password"),rs.getString("Nome"),rs.getString("Cognome"),rs.getString("Ruolo"),rs.getString("PF"),rs.getInt("Stelle"));
 
             }
-
+            System.out.println("Successful get");
 
             return u;
 
@@ -277,6 +277,105 @@ public class Dao {
     }
 
 
+    public int getIDbyUtente(String email){
+
+        Connection con = null;
+        int ID= -1;
+
+        try {
+            con = Dao.getConnection();
+
+
+            PreparedStatement prs = con.prepareStatement("SELECT ID FROM utente WHERE Email = ?;");
+            prs.setString(1,email);
+
+
+
+
+            ResultSet rs = prs.executeQuery();
+
+            if(rs.next()){
+                ID = rs.getInt("ID");
+
+            }
+
+            if(ID==-1){
+                System.out.println("Fail Get");
+            }
+            else {
+                System.out.println("Successful Get");
+            }
+
+
+            return ID;
+
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+
+
+        }
+
+        return ID;
+    }
+
+    public Utente getUtenteByID(int ID){
+        Connection con = null;
+        Utente u=null;
+
+        try {
+            con = Dao.getConnection();
+
+
+            PreparedStatement prs = con.prepareStatement("SELECT * FROM utente WHERE ID = ?;");
+            prs.setInt(1,ID);
+
+
+
+
+            ResultSet rs = prs.executeQuery();
+
+            if(rs.next()){
+                u = new Utente(rs.getInt("ID"), rs.getString("Email"), rs.getString("Password"),rs.getString("Nome"),rs.getString("Cognome"),rs.getString("Ruolo"),rs.getString("PF"),rs.getInt("Stelle"));
+
+
+            }
+
+            if(u==null){
+                System.out.println("Fail Get");
+            }
+            else {
+                System.out.println("Successful Get");
+            }
+
+
+            return u;
+
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+
+
+        }
+
+        return u;
+    }
+
+
     //Utente--------------------------------------------------------------------
 
 
@@ -379,6 +478,54 @@ public class Dao {
 
     }
 
+    public Corso getCorsoByID(int ID){
+        Connection con = null;
+        Corso c=null;
+
+        try {
+            con = Dao.getConnection();
+
+
+            PreparedStatement prs = con.prepareStatement("SELECT * FROM utente WHERE ID = ?;");
+            prs.setInt(1,ID);
+
+
+
+
+            ResultSet rs = prs.executeQuery();
+
+            if(rs.next()){
+                c = new Corso(rs.getInt("ID"),rs.getString("nome"));
+
+
+            }
+
+            if(u==null){
+                System.out.println("Fail Get");
+            }
+            else {
+                System.out.println("Successful Get");
+            }
+
+
+            return c;
+
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+
+
+        }
+
+        return c;
+    }
 
     //Corso-----------------------------------------------------------------------
 
@@ -529,7 +676,7 @@ public class Dao {
 
     }
 
-    public static void annullaPrenotazione(String data,String ora,int Docente_ID){
+    public static void annullaLezione(String data,String ora,int Docente_ID){
         Connection con = null;
 
         try {
@@ -566,8 +713,54 @@ public class Dao {
 
 
 
+    public ArrayList<Lezione> getLezioneByUtente(String mail){
+        Connection con = null;
+        ArrayList<Lezione> dump = new ArrayList<>();
+        try {
+            con = Dao.getConnection();
+            Statement st = con.createStatement();
+            int ID = getIDbyUtente(mail);
+
+            PreparedStatement prs = con.prepareStatement("Select * From lezione Where Utente_ID = ?;");
+            prs.setInt(1,ID);
+
+
+            ResultSet rs = prs.executeQuery();
+
+            while (rs.next()) {
+                Lezione u = new Lezione(rs.getString("Data"), rs.getString("Ora"),rs.getString("Stato"),rs.getInt("Corso_ID"),rs.getInt("Docente_ID"),rs.getInt("Utente_ID"));
+                dump.add(u);
+            }
+
+            System.out.println("Successful Dump ");
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+
+
+        }
+
+
+        return dump;
+    }
+
+
+
     //Lezione-----------------------------------------------------
 
+
+    //Helper
+
+
+
+    //Helper
 
 
 
