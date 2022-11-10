@@ -486,7 +486,7 @@ public class Dao {
             con = Dao.getConnection();
 
 
-            PreparedStatement prs = con.prepareStatement("SELECT * FROM utente WHERE ID = ?;");
+            PreparedStatement prs = con.prepareStatement("SELECT * FROM corso WHERE ID = ?;");
             prs.setInt(1,ID);
 
 
@@ -500,7 +500,7 @@ public class Dao {
 
             }
 
-            if(u==null){
+            if(c==null){
                 System.out.println("Fail Get");
             }
             else {

@@ -13,13 +13,13 @@ import javax.servlet.annotation.*;
 import Dao.*;
 @WebServlet(name = "getPrenotazioniByUtente", value = "/api/getPrenotazioniByUtente")
 public class getPrenotazioniByUtente extends HttpServlet {
-    Dao dao;
+    private Dao dao;
 
 
     public void init(ServletConfig config) {
 
-        dao = (Dao) config.getServletContext().getAttribute("dao");
-
+        this.dao  = new Dao(config.getServletContext().getInitParameter("dbURL"),config.getServletContext().getInitParameter("dbUser"),config.getServletContext().getInitParameter("dbUserPass"));
+        System.out.println(dao==null);
 
     }
 
@@ -39,36 +39,49 @@ public class getPrenotazioniByUtente extends HttpServlet {
 
         HttpSession s = request.getSession();
 
+        if (this.dao == null) {
+            PrintWriter out = response.getWriter();
+            out.println("dao is null");
+        } else {
 
-        String userName = request.getParameter("mail");
-        System.out.println(userName);
-        PrintWriter out = response.getWriter();
-        String password = request.getParameter("pass");
-        System.out.println(password);
-        Utente u = Dao.getUtente(userName);
-        if (u==null) {
-            out.print("{" +
-                    "login_state" + ":" + "notExist" +
-                    "}");
-            out.flush();
+            String userName = request.getParameter("mail");
+            Utente u = dao.getUtente(userName);
+            ArrayList<Lezione> lex = dao.getLezioneByUtente(userName);
+            PrintWriter out = response.getWriter();
+            out.println("{");
+            out.println("\"ID\"" + ":" + "\""+u.getID()+ "\"" + ",");
+
+            out.println("\"Email\"" + ":" + "\""+u.getEmail()+ "\"" + ",");
+            out.println("\"numero_lezioni\"" + ":"+ "\"" + lex.size()+ "\"" + ",");
+            out.println("\"lezioni\" : ");
+            out.println("[");
+            for (int i = 0; i < lex.size() ; i++) {
+                Lezione l = lex.get(i);
+                Corso c = dao.getCorsoByID(l.getCorso_ID());
+                Utente doc = dao.getUtenteByID(l.getDocente_ID());
+                Utente stud = dao.getUtenteByID(l.getUtente_ID());
+                out.println("     {");
+                out.println("       \"data\" : " + "\"" +l.getData() + "\"" + " ,");
+                out.println("       \"ora\" : " +  "\"" + l.getOra() + "\"" + " ,");
+                out.println("       \"stato\" : " +"\"" + l.getStato() +"\"" + " ,");
+                out.println("       \"nome_corso\": " +"\"" + c.getNome() + "\"" +" ,");
+                out.println("       \"nome_docente\": " +"\"" + doc.getNome() +"\"" + " ,");
+                out.println("       \"cognome_docente\" : " +"\"" + doc.getCognome() +"\"" + " ,");
+                out.println("       \"nome_studente\" : " +"\"" + stud.getNome() +"\"" + " ,");
+                out.println("       \"cognome_studente\" : " +"\"" + stud.getCognome() +"\"" );
+                out.println("     }");
+                if(i<lex.size()-1){
+                    out.print(",");
+                }
+
+            }
+
+
+            out.println("]");
+            out.println("}");
+
+
         }
-
-        if (Dao.checkMD5(u.getPassword(), password)) {
-
-            out.print("{" +
-                    "login_state" + ":" + "true" +
-                    "}");
-            out.flush();
-
-
-        }
-        else {
-            out.print("{" +
-                    "login_state" + ":" + "false" +
-                    "}");
-            out.flush();
-        }
-
     }
 }
 

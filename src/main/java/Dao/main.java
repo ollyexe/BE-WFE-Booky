@@ -13,8 +13,8 @@ public class main {
 
 
 
+System.out.println(dao.getCorsoByID(2).toString());
 
-        
 
 
 
