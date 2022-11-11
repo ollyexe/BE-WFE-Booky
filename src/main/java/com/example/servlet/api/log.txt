@@ -7,3 +7,5 @@ BEE fatte :
 -getAllCorsiDisponibili
 -getLezioniByCorso
 -getLezioniByDocente
+
+-getAllCorsiDisponibili,getLezioniByCorso,getLezioniByDocente
