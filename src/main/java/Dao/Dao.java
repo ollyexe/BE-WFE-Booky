@@ -833,6 +833,39 @@ public class Dao {
 
     //Helper
 
+    public ArrayList<Utente> getAllProfessori(){
+        Connection con = null;
+        ArrayList<Utente> docenti = new ArrayList<>();
+        try {
+            con = Dao.getConnection();
+            Statement st = con.createStatement();
+
+            ResultSet rs = st.executeQuery("Select * From utente Where ruolo = 'docente';");
+
+            while (rs.next()) {
+
+                Utente u = new Utente(rs.getInt("ID"), rs.getString("Email"), rs.getString("Password"),rs.getString("Nome"),rs.getString("Cognome"),rs.getString("Ruolo"),rs.getString("PF"),rs.getInt("Stelle"));
+                docenti.add(u);
+            }
+
+            System.out.println("Successful Dump");
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+
+
+        }
+
+
+        return docenti;
+    }
 
 
     //Helper

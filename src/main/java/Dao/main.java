@@ -12,8 +12,8 @@ public class main {
 
 
 
-        dao.getLezioneByUtenteAndByDay("luigi@gmail.com","2022-11-09");
-for(Lezione l :dao.getLezioneByUtenteAndByDay("luigi@gmail.com","2022-11-10")){
+        dao.insertUtente(new Utente(0,"barbero@gmail.com","123Stella","alessandro","barbero","docente"));
+for(Utente  l :dao.getAllProfessori()){
     System.out.println(l.toString());
 }
 

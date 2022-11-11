@@ -3,3 +3,4 @@ BEE fatte :
 -login
 -getPrenotazioniByUtente
 -getLeasonsStory
+-getAllDocenti
