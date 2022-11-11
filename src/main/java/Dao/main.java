@@ -12,8 +12,10 @@ public class main {
 
 
 
-
-System.out.println(dao.getCorsoByID(2).toString());
+        dao.getLezioneByUtenteAndByDay("luigi@gmail.com","2022-11-09");
+for(Lezione l :dao.getLezioneByUtenteAndByDay("luigi@gmail.com","2022-11-10")){
+    System.out.println(l.toString());
+}
 
 
 

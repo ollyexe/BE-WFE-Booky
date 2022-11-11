@@ -751,6 +751,44 @@ public class Dao {
         return dump;
     }
 
+    public ArrayList<Lezione> getLezioneByUtenteAndByDay(String mail,String data){
+        Connection con = null;
+        ArrayList<Lezione> dump = new ArrayList<>();
+        try {
+            con = Dao.getConnection();
+            Statement st = con.createStatement();
+            int ID = getIDbyUtente(mail);
+
+            PreparedStatement prs = con.prepareStatement("Select * From lezione Where Utente_ID = ? AND Data = ?;");
+            prs.setInt(1,ID);
+            prs.setString(2,data);
+
+
+            ResultSet rs = prs.executeQuery();
+
+            while (rs.next()) {
+                Lezione u = new Lezione(rs.getString("Data"), rs.getString("Ora"),rs.getString("Stato"),rs.getInt("Corso_ID"),rs.getInt("Docente_ID"),rs.getInt("Utente_ID"));
+                dump.add(u);
+            }
+
+            System.out.println("Successful Dump ");
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+
+
+        }
+
+
+        return dump;
+    }
 
 
     //Lezione-----------------------------------------------------
