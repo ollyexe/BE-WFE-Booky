@@ -13,8 +13,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
-@WebServlet(name = "getAllDocenti", value = "/api/getAllDocenti")
-public class getAllDocenti extends HttpServlet {
+@WebServlet(name = "getAllCorsiDisponibili", value = "/api/getAllCorsiDisponibili")
+public class getAllCorsiDisponibili extends HttpServlet {
     private Dao dao;
 
 
@@ -46,13 +46,13 @@ public class getAllDocenti extends HttpServlet {
             out.println("dao is null");
         } else {
 
-            ArrayList<Utente> docenti = dao.getAllProfessori();
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            String json = gson.toJson(docenti);
-            JsonElement je = JsonParser.parseString(json);
 
+            ArrayList<Corso> corsi = dao.getAllCorsiDisponibili();
+            String json = gson.toJson(corsi);
+            JsonElement je = JsonParser.parseString(json);
             PrintWriter out = response.getWriter();
-            out.println("{"+"\"Docenti\" : "+gson.toJson(je)+ "}");
+            out.println("{"+"\"Corsi\" : "+gson.toJson(je)+ "}");
             out.flush();
 
 

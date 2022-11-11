@@ -4,3 +4,6 @@ BEE fatte :
 -getPrenotazioniByUtente
 -getLeasonsStory
 -getAllDocenti
+-getAllCorsiDisponibili
+-getLezioniByCorso
+-getLezioniByDocente

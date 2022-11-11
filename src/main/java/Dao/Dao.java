@@ -300,10 +300,10 @@ public class Dao {
             }
 
             if(ID==-1){
-                System.out.println("Fail Get");
+                System.out.println("Fail Get val -1");
             }
             else {
-                System.out.println("Successful Get");
+                System.out.println("Successful Get getIDbyUtente");
             }
 
 
@@ -349,10 +349,10 @@ public class Dao {
             }
 
             if(u==null){
-                System.out.println("Fail Get");
+                System.out.println("Fail Get User");
             }
             else {
-                System.out.println("Successful Get");
+                System.out.println("Successful Get User");
             }
 
 
@@ -501,10 +501,10 @@ public class Dao {
             }
 
             if(c==null){
-                System.out.println("Fail Get");
+                System.out.println("Fail Get Corso");
             }
             else {
-                System.out.println("Successful Get");
+                System.out.println("Successful Get Corso");
             }
 
 
@@ -867,6 +867,159 @@ public class Dao {
         return docenti;
     }
 
+    public ArrayList<Corso> getAllCorsiDisponibili(){
+        Connection con = null;
+
+        ArrayList<Corso> corsi_disponibili = new ArrayList<>();
+        try {
+            con = Dao.getConnection();
+            Statement st = con.createStatement();
+
+            ResultSet rs = st.executeQuery("Select distinct(Corso_ID) From lezione;");
+
+            while (rs.next()) {
+
+                Corso c =getCorsoByID(rs.getInt("Corso_ID"));
+                corsi_disponibili.add(c);
+            }
+
+
+            System.out.println("Successful Dump");
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+
+
+        }
+
+
+        return corsi_disponibili;
+    }
+
+    public Corso getCorsoByNome(String corso){
+        Connection con = null;
+        ArrayList<Lezione> dump = new ArrayList<>();
+        Corso c=null;
+        try {
+            con = Dao.getConnection();
+            Statement st = con.createStatement();
+            PreparedStatement prs = con.prepareStatement("Select * From corso Where Nome = ?;");
+            prs.setString(1,corso);
+
+
+            ResultSet rs = prs.executeQuery();
+
+            if (rs.next()) {
+                c= new Corso(rs.getInt("ID"), rs.getString("Nome"));
+
+            }
+
+            System.out.println("Successful Dump ");
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+
+
+        }
+
+
+        return c;
+    }
+
+    public ArrayList<Lezione> getLezioniLibereByCorso(String corso) {
+        Connection con = null;
+        ArrayList<Lezione> dump = new ArrayList<>();
+        Corso c = getCorsoByNome(corso);
+        try {
+            con = Dao.getConnection();
+            Statement st = con.createStatement();
+            int ID_corso = c.getID();
+
+
+            PreparedStatement prs = con.prepareStatement("Select * From lezione Where Corso_ID = ? AND Stato = 'Libera' ;");
+            prs.setInt(1,ID_corso);
+
+
+
+            ResultSet rs = prs.executeQuery();
+
+            while (rs.next()) {
+                Lezione u = new Lezione(rs.getString("Data"), rs.getString("Ora"),rs.getString("Stato"),rs.getInt("Corso_ID"),rs.getInt("Docente_ID"),rs.getInt("Utente_ID"));
+                dump.add(u);
+            }
+
+            System.out.println("Successful Dump ");
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+
+
+        }
+
+
+        return dump;
+    }
+    public ArrayList<Lezione> getLezioniLibereByDocente(String docente) {
+        Connection con = null;
+        ArrayList<Lezione> dump = new ArrayList<>();
+        Utente doc = getUtenteByID(getIDbyUtente(docente));
+        try {
+            con = Dao.getConnection();
+            Statement st = con.createStatement();
+
+
+
+            PreparedStatement prs = con.prepareStatement("Select * From lezione Where Docente_ID = ? AND Stato = 'Libera' ;");
+            prs.setInt(1,doc.getID());
+
+
+
+            ResultSet rs = prs.executeQuery();
+
+            while (rs.next()) {
+                Lezione u = new Lezione(rs.getString("Data"), rs.getString("Ora"),rs.getString("Stato"),rs.getInt("Corso_ID"),rs.getInt("Docente_ID"),rs.getInt("Utente_ID"));
+                dump.add(u);
+            }
+
+            System.out.println("Successful Dump ");
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+
+
+        }
+
+
+        return dump;
+    }
 
     //Helper
 
