@@ -48,7 +48,7 @@ public class login extends HttpServlet {
         Utente u = Dao.getUtente(userName);
         if (u==null) {
             out.print("{" +
-                    "login_state" + ":" + "notExist" +
+                    "\"login_state\"" + ":" + "\"notExist\"" +
                     "}");
             out.flush();
         }
@@ -56,7 +56,7 @@ public class login extends HttpServlet {
         if (Dao.checkMD5(u.getPassword(), password)) {
 
             out.print("{" +
-                    "login_state" + ":" + "true" +
+                    "\"login_state\"" + ":" + "\"true\"" +
                     "}");
             out.flush();
 
@@ -64,7 +64,7 @@ public class login extends HttpServlet {
         }
         else {
             out.print("{" +
-                    "login_state" + ":" + "false" +
+                    "\"login_state\"" + ":" + "\"false\"" +
                     "}");
             out.flush();
         }

@@ -49,6 +49,7 @@ public class getPrenotazioniByUtente extends HttpServlet {
             ArrayList<Lezione> lex = dao.getLezioneByUtente(userName);
             PrintWriter out = response.getWriter();
             out.println("{");
+            out.println("\"Nome Oggetto\"" + ":" + "\""+"Prenotazioni All"+ "\"" + ",");
             out.println("\"ID\"" + ":" + "\""+u.getID()+ "\"" + ",");
 
             out.println("\"Email\"" + ":" + "\""+u.getEmail()+ "\"" + ",");

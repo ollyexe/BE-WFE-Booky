@@ -11,8 +11,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import Dao.*;
-@WebServlet(name = "getLeasonsByUserAndByDay", value = "/api/getLeasonsByUserAndByDay")
-public class getLeasonsByUserAndByDay extends HttpServlet {
+@WebServlet(name = "getLeasonsStory", value = "/api/getLeasonsStory")
+public class getLeasonsStory extends HttpServlet {
     private Dao dao;
 
 
@@ -43,16 +43,16 @@ public class getLeasonsByUserAndByDay extends HttpServlet {
             PrintWriter out = response.getWriter();
             out.println("dao is null");
         } else {
-            String date = request.getParameter("data");
+
             String userName = request.getParameter("mail");
             Utente u = dao.getUtente(userName);
-            ArrayList<Lezione> lex = dao.getLezioneByUtenteAndByDay(userName,date);
+            ArrayList<Lezione> lex = dao.getLeasonsStory(userName);
             PrintWriter out = response.getWriter();
             out.println("{");
-            out.println("\"Nome Oggetto\"" + ":" + "\""+"Leasons By Utente And By Date"+ "\"" + ",");
+            out.println("\"Nome Oggetto\"" + ":" + "\""+"Leasons Story"+ "\"" + ",");
             out.println("\"ID\"" + ":" + "\""+u.getID()+ "\"" + ",");
+
             out.println("\"Email\"" + ":" + "\""+u.getEmail()+ "\"" + ",");
-            out.println("\"Data\"" + ":" + "\""+date+ "\"" + ",");
             out.println("\"numero_lezioni\"" + ":"+ "\"" + lex.size()+ "\"" + ",");
             out.println("\"lezioni\" : ");
             out.println("[");
