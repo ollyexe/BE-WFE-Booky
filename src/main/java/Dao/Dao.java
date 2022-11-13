@@ -9,22 +9,19 @@ public class Dao {
     private static String url ,user ,password;
 
     public  Dao(String url ,String user ,String password){
-        this.url=url;
-        this.user = user;
-        this.password=password;
+        Dao.url =url;
+        Dao.user = user;
+        Dao.password =password;
 
     }
 
 
     public static String encryptMD5(String testoChiaro){
-        String key = DigestUtils.md5Hex(testoChiaro).toUpperCase();
-        return key;
+
+        return DigestUtils.md5Hex(testoChiaro).toUpperCase();
     }
     public static boolean checkMD5(String password, String testoChiaro){
-        if (password.equals(encryptMD5(testoChiaro).toUpperCase()))
-            return true;
-        else
-            return false;
+        return password.equals(encryptMD5(testoChiaro).toUpperCase());
     }
     public static void registerDriver() {
         try { // registrazione del driver JDBC per MySQL
@@ -40,8 +37,13 @@ public class Dao {
         try {
             Dao.registerDriver();
             Connection con = DriverManager.getConnection(url, user, password);
-            System.out.println("Successful Connection");
-            return con;
+            if(con==null){
+                throw new Error("Connection.connection.getConnection() : connessione non riuscita");
+            }
+            else{
+                return con;
+            }
+
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -52,15 +54,9 @@ public class Dao {
 
     private void closeCon(Connection con) {
         try {
-
-        } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
-
+            con.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
 
     }
@@ -78,11 +74,15 @@ public class Dao {
 
             while (rs.next()) {
 
-                Utente u = new Utente(rs.getInt("ID"), rs.getString("Email"), rs.getString("Password"),rs.getString("Nome"),rs.getString("Cognome"),rs.getString("Ruolo"),rs.getString("PF"),rs.getInt("Stelle"));
-                dump.add(u);
+                if(rs.getString("Attivo").equals("true")){
+
+                    Utente u = new Utente(rs.getInt("ID"), rs.getString("Email"), rs.getString("Password"),rs.getString("Nome"),rs.getString("Cognome"),rs.getString("Ruolo"),rs.getString("PF"),rs.getInt("Stelle"),rs.getString("Attivo"));
+                    dump.add(u);
+                }
+
             }
 
-            System.out.println("Successful Dump");
+            System.out.println("Successful Dump of : " + dump.size());
 
 
         } catch (SQLException e) {
@@ -102,27 +102,29 @@ public class Dao {
     }
 
 
-    public static Utente getUtente(String mail){
+    public static Utente getUtente(String email){
         Connection con = null;
         Utente u = null;
 
         try {
+
             con = Dao.getConnection();
+            if(!utenteExists(email)){
+                throw new Error("Utente.getUtente().error():User with this mail doesnt  exists");
 
-
+            }
             PreparedStatement prs = con.prepareStatement("SELECT * FROM utente Where Email = ? ;");
-            prs.setString(1, mail);
-
-
+            prs.setString(1, email);
             ResultSet rs = prs.executeQuery();
 
             if(rs.next()){
-                 u = new Utente(rs.getInt("ID"), rs.getString("Email"), rs.getString("Password"),rs.getString("Nome"),rs.getString("Cognome"),rs.getString("Ruolo"),rs.getString("PF"),rs.getInt("Stelle"));
+                 u = new Utente(rs.getInt("ID"), rs.getString("Email"), rs.getString("Password"),rs.getString("Nome"),rs.getString("Cognome"),rs.getString("Ruolo"),rs.getString("PF"),rs.getInt("Stelle"), rs.getString("Attivo"));
 
             }
-            System.out.println("Successful get");
 
-            return u;
+
+                return u;
+
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -140,26 +142,26 @@ public class Dao {
     }
 
 
-    public static int  insertUtente(Utente u) {
+    public static boolean insertUtente(Utente u) {
         Connection con = null;
 
         try {
+
             con = Dao.getConnection();
+            if(utenteExists(u.getEmail())){
+                throw new Error("Utente.insertUser.error():User with this mail already exists");
 
-
-            PreparedStatement prs = con.prepareStatement("INSERT INTO `utente` (`ID`, `Email`, `Password`, `Nome`, `Cognome`, `Ruolo`, `PF`, `Stelle`) VALUES (NULL, ?,?,?,?,?, NULL, '0');");
-
-
+            }
+            PreparedStatement prs = con.prepareStatement("INSERT INTO utente (ID, Email, Password, Nome, Cognome, Ruolo, PF, Stelle,Attivo) VALUES (NULL, ?,?,?,?,?, NULL, '0','true');");
             prs.setString(1, u.getEmail());
             prs.setString(2, encryptMD5(u.getPassword()));
             prs.setString(3, u.getNome());
             prs.setString(4, u.getCognome());
             prs.setString(5, u.getRuolo());
+            prs.executeUpdate();
 
 
-
-            return prs.executeUpdate();
-
+            return utenteExists(u.getEmail());
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -173,25 +175,70 @@ public class Dao {
 
         }
 
-        return 0;
+        return false;
     }
 
 
-    public static void deleteUtente(String email) {
+    public static boolean utenteExists(String email){
+        Connection con = null;
+        ArrayList<String> existing_users = new ArrayList<>();
+        try {
+            con = Dao.getConnection();
+            Statement st = con.createStatement();
+
+            ResultSet rs = st.executeQuery("Select Email From utente  ; ");
+
+            while (rs.next()) {
+
+
+
+                    existing_users.add(rs.getString("Email"));
+
+
+            }
+
+            return existing_users.contains(email);
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+
+
+        }
+        return false;
+    }
+
+
+    public static boolean deleteUtente(String email) {
         Connection con = null;
 
         try {
             con = Dao.getConnection();
+            if(!utenteExists(email)){
+                throw new Error("Utente.deleteUtente.error():User with this mail doesnt exists");
+
+            }
 
 
-            PreparedStatement prs = con.prepareStatement("DELETE FROM  utente WHERE Email=? ");
+            PreparedStatement prs = con.prepareStatement("UPDATE utente SET Attivo = 'false' WHERE utente.Email = ?;");
             prs.setString(1, email);
 
 
             prs.executeUpdate();
 
 
-            System.out.println("Successful Delete");
+            if(utenteIsActive(email)){
+                throw new Error("Utente.deleteUser.error():Unsuccesful deletion");
+            }
+            else{
+                return true;
+            }
 
 
         } catch (SQLException e) {
@@ -205,26 +252,126 @@ public class Dao {
 
 
         }
+        return false;
 
     }
 
-    public void addFoto(int id,String foto_path){
+
+    public static boolean utenteIsActive(String email){
+        Connection con = null;
+        ArrayList<String> existing_users = new ArrayList<>();
+        try {
+
+
+            con = Dao.getConnection();
+            if(!utenteExists(email)){
+                throw new Error("Utente.utenteIsActive.error():User with this mail doesnt exists");
+
+            }
+            Statement st = con.createStatement();
+
+            ResultSet rs = st.executeQuery("Select Email From utente Where Attivo = 'true' ; ");
+
+            while (rs.next()) {
+
+
+
+                existing_users.add(rs.getString("Email"));
+
+
+            }
+
+            return existing_users.contains(email);
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+
+
+        }
+        return false;
+    }
+
+
+    public boolean addFoto(String email,String foto_path){
+            Connection con = null;
+
+            try {
+                con = Dao.getConnection();
+                if(!utenteExists(email)){
+                    throw new Error("Utente.addFoto.error():User with this mail doesnt exists");
+
+                }
+
+
+                PreparedStatement prs = con.prepareStatement("UPDATE utente SET PF = ? WHERE utente.Email = ?;");
+                prs.setString(1,foto_path);
+                prs.setString(2,email);
+
+
+
+                prs.executeUpdate();
+
+                Utente u = getUtente(email);
+
+
+                return u.getPf().equals(foto_path);
+
+
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            } finally {
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+
+
+            }
+
+        return false;
+        }
+
+
+    public boolean updateStelle(String email){
         Connection con = null;
 
         try {
             con = Dao.getConnection();
+            if(!utenteExists(email)){
+                throw new Error("Utente.utenteIsActive.error():User with this mail doesnt exists");
+
+            }
+
+            Utente u = getUtente(email);
+            // getMediaValutazioniByDocente
+            //double stelle=
+            double stelle = 5;
 
 
-            PreparedStatement prs = con.prepareStatement("UPDATE `utente` SET `PF` = ? WHERE `utente`.`ID` = ?;");
-            prs.setString(1,foto_path);
-            prs.setInt(2,id);
+
+            PreparedStatement prs = con.prepareStatement("UPDATE utente SET Stelle = ? WHERE utente.Email = ?;");
+            prs.setDouble(1,stelle);
+            prs.setString(2,email);
 
 
 
             prs.executeUpdate();
 
 
-            System.out.println("Successful Update");
+            if(getUtente(email).getStelle()==stelle){
+                return true;
+            }else{
+                throw new Error("Utente.updateStelle.error(): update non riuscito");
+
+            }
 
 
         } catch (SQLException e) {
@@ -239,76 +386,39 @@ public class Dao {
 
         }
 
-
+        return false;
     }
 
-    public void updateStelle(int id,int stelle){
+    public int getNumeroValutazioni(String email){
         Connection con = null;
 
         try {
             con = Dao.getConnection();
+            if(!utenteExists(email)){
+                throw new Error("Utente.utenteIsActive.error():User with this mail doesnt exists");
 
-
-            PreparedStatement prs = con.prepareStatement("UPDATE `utente` SET `Stelle` = ? WHERE `utente`.`ID` = ?;");
-            prs.setString(1,Integer.toString(stelle));
-            prs.setInt(2,id);
-
-
-
-            prs.executeUpdate();
-
-
-            System.out.println("Successful Update");
-
-
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
             }
 
-
-        }
-
-
-    }
-
-
-    public int getIDbyUtente(String email){
-
-        Connection con = null;
-        int ID= -1;
-
-        try {
-            con = Dao.getConnection();
+            Utente u = getUtente(email);
+            // getMediaValutazioniByDocente
+            //double stelle=
+            int numero_valutazioni = 0;
 
 
-            PreparedStatement prs = con.prepareStatement("SELECT ID FROM utente WHERE Email = ?;");
-            prs.setString(1,email);
 
+            PreparedStatement prs = con.prepareStatement("SELECT count(Valutazione) AS numero_valutazioni FROM lezione WHERE Docente_ID = ? AND Valutazione>0 AND Stato='Conclusa';");
+            prs.setInt(1,u.getID());
 
 
 
             ResultSet rs = prs.executeQuery();
 
             if(rs.next()){
-                ID = rs.getInt("ID");
-
-            }
-
-            if(ID==-1){
-                System.out.println("Fail Get val -1");
-            }
-            else {
-                System.out.println("Successful Get getIDbyUtente");
+                numero_valutazioni= rs.getInt("numero_valutazioni");
             }
 
 
-            return ID;
-
+            return numero_valutazioni;
 
 
         } catch (SQLException e) {
@@ -323,57 +433,9 @@ public class Dao {
 
         }
 
-        return ID;
+        return -1;
     }
 
-    public Utente getUtenteByID(int ID){
-        Connection con = null;
-        Utente u=null;
-
-        try {
-            con = Dao.getConnection();
-
-
-            PreparedStatement prs = con.prepareStatement("SELECT * FROM utente WHERE ID = ?;");
-            prs.setInt(1,ID);
-
-
-
-
-            ResultSet rs = prs.executeQuery();
-
-            if(rs.next()){
-                u = new Utente(rs.getInt("ID"), rs.getString("Email"), rs.getString("Password"),rs.getString("Nome"),rs.getString("Cognome"),rs.getString("Ruolo"),rs.getString("PF"),rs.getInt("Stelle"));
-
-
-            }
-
-            if(u==null){
-                System.out.println("Fail Get User");
-            }
-            else {
-                System.out.println("Successful Get User");
-            }
-
-
-            return u;
-
-
-
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
-
-        }
-
-        return u;
-    }
 
 
     //Utente--------------------------------------------------------------------
@@ -381,7 +443,8 @@ public class Dao {
 
     //Corso------------------------------------------------------------------
 
-    public static ArrayList<Corso> dumpTableCorso() {
+
+    public ArrayList<Corso> dumpTableCorso() {
         Connection con = null;
         ArrayList<Corso> dump = new ArrayList<>();
         try {
@@ -390,13 +453,12 @@ public class Dao {
 
             ResultSet rs = st.executeQuery("Select * From corso");
 
-            while (rs.next()) {
-                Corso u = new Corso(rs.getInt("ID"),rs.getString("nome"));
+            while (rs.next()&& rs.getString("Attivo").equals("true")) {
+                Corso u = new Corso(rs.getInt("ID"),rs.getString("nome"),rs.getString("Attivo"));
                 dump.add(u);
             }
 
-            System.out.println("Successful Dump" +
-                    "");
+            System.out.println("Successful Dump of : " + dump.size());
 
 
         } catch (SQLException e) {
@@ -414,6 +476,7 @@ public class Dao {
 
         return dump;
     }
+
 
     public static void insertCorso(Corso c) {
         Connection con = null;
@@ -447,21 +510,25 @@ public class Dao {
 
     }
 
-    public static void deleteCorso(String corso) {
+    public static boolean corsoExists(String corso){
         Connection con = null;
-
+        ArrayList<String> existing_courses = new ArrayList<>();
         try {
             con = Dao.getConnection();
+            Statement st = con.createStatement();
+
+            ResultSet rs = st.executeQuery("Select Nome From Corso  ; ");
+
+            while (rs.next()) {
 
 
-            PreparedStatement prs = con.prepareStatement("DELETE FROM  corso WHERE nome=? ");
-            prs.setString(1, corso);
+
+                existing_courses.add(rs.getString("Nome"));
 
 
-            prs.executeUpdate();
+            }
 
-
-            System.out.println("Successful Delete");
+            return existing_courses.contains(corso);
 
 
         } catch (SQLException e) {
@@ -475,9 +542,95 @@ public class Dao {
 
 
         }
-
+        return false;
     }
 
+    public static boolean corsoIsActive(String corso){
+        Connection con = null;
+        ArrayList<String> existing_courses = new ArrayList<>();
+        try {
+
+
+            con = Dao.getConnection();
+            if(!corsoExists(corso)){
+                throw new Error("Corso.corsoIsActive.error():Corso with this name doesnt exists");
+
+            }
+            Statement st = con.createStatement();
+
+            ResultSet rs = st.executeQuery("Select Nome From Corso Where Attivo = 'true' ; ");
+
+            while (rs.next()) {
+
+
+
+                existing_courses.add(rs.getString("nome"));
+
+
+            }
+
+            return existing_courses.contains(corso);
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+
+
+        }
+        return false;
+    }
+
+
+
+
+    public boolean deleteCorso(String corso) {
+        Connection con = null;
+
+        try {
+            con = Dao.getConnection();
+
+            if(!corsoExists(corso)){
+                throw new Error("Corso.addFoto.error():User with this mail doesnt exists");
+
+            }
+
+
+            PreparedStatement prs = con.prepareStatement("UPDATE corso SET Attivo = 'false' WHERE corso.Nome = ?;");
+            prs.setString(1, corso);
+
+
+            prs.executeUpdate();
+
+
+            if(corsoIsActive(corso)){
+                throw new Error("Corso.deleteUser.error():Unsuccesful deletion");
+            }
+            else{
+                return true;
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+
+
+        }
+        return false;
+    }
+
+    /*
     public Corso getCorsoByID(int ID){
         Connection con = null;
         Corso c=null;
@@ -1024,7 +1177,7 @@ public class Dao {
     //Helper
 
 
-
+    */
 
 
 }

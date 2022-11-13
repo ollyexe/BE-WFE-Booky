@@ -8,9 +8,13 @@ public class Utente {
     private String cognome;
     private String ruolo;
 
-    private String pf;  //profile foto
-    private int stelle;
+    private String pf=null;  //profile foto
+    private int stelle=0;
+    private boolean attivo = true;
 
+
+
+    //object to insert
     public Utente(int ID,String email, String password,String nome,String cognome, String ruolo){
         this.ID=ID;
         this.email=email;
@@ -18,19 +22,12 @@ public class Utente {
         this.nome=nome;
         this.cognome  = cognome;
         this.ruolo = ruolo;
-    }
-    public Utente(int ID,String email, String password,String nome,String cognome, String ruolo,String PF){
-        this.ID=ID;
-        this.email=email;
-        this.password=password;
-        this.nome=nome;
-        this.cognome  = cognome;
-        this.ruolo = ruolo;
-        this.pf=PF;
+
 
     }
 
-    public Utente(int ID,String email, String password,String nome,String cognome, String ruolo,String PF,int Stelle){
+    //object to get
+    public Utente(int ID,String email, String password,String nome,String cognome, String ruolo,String PF,int Stelle,String attivo){
         this.ID=ID;
         this.email=email;
         this.password=password;
@@ -39,18 +36,15 @@ public class Utente {
         this.ruolo = ruolo;
         this.pf=PF;
         this.stelle=Stelle;
+        if(attivo=="false"){
+            this.attivo = false;
+        }
+        else if(attivo=="true") {
+            this.attivo=true;
+        }
 
     }
-    public Utente(int ID,String email, String password,String nome,String cognome, String ruolo,int Stelle){
-        this.ID=ID;
-        this.email=email;
-        this.password=password;
-        this.nome=nome;
-        this.cognome  = cognome;
-        this.ruolo = ruolo;
-        this.stelle=Stelle;
 
-    }
 
 
     public int getID() {
@@ -97,6 +91,16 @@ public class Utente {
         this.stelle = stelle;
     }
 
+
+
+    public boolean isAttivo() {
+        return attivo;
+    }
+
+    public void setAttivo(boolean attivo) {
+        this.attivo = attivo;
+    }
+
     @Override
     public String toString() {
         return "Utente{" +
@@ -108,6 +112,7 @@ public class Utente {
                 ", ruolo='" + ruolo + '\'' +
                 ", pf='" + pf + '\'' +
                 ", stelle=" + stelle +
+                ", attivo=" + attivo +
                 '}';
     }
 }
