@@ -9,7 +9,7 @@ public class Utente {
     private String ruolo;
 
     private String pf=null;  //profile foto
-    private int stelle=0;
+    private double stelle=0;
     private boolean attivo = true;
 
 
@@ -27,7 +27,7 @@ public class Utente {
     }
 
     //object to get
-    public Utente(int ID,String email, String password,String nome,String cognome, String ruolo,String PF,int Stelle,String attivo){
+    public Utente(int ID,String email, String password,String nome,String cognome, String ruolo,String PF,double Stelle,String attivo){
         this.ID=ID;
         this.email=email;
         this.password=password;
@@ -83,11 +83,11 @@ public class Utente {
 
 
 
-    public int getStelle() {
+    public double getStelle() {
         return stelle;
     }
 
-    public void setStelle(int stelle) {
+    public void setStelle(double stelle) {
         this.stelle = stelle;
     }
 

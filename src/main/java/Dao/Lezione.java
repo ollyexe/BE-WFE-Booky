@@ -9,6 +9,7 @@ public class Lezione {
     private String data;
     private String Ora;
 
+
     //object to get
     public Lezione( String data, String ora,String stato,int corso_id, int docente_id, int utente_id ,int valutazione) {
         this.Corso_ID = corso_id;
@@ -57,13 +58,13 @@ public class Lezione {
     @Override
     public String toString() {
         return "Lezione{" +
-                "Corso_ID=" + Corso_ID +
+                ", Ora='" + Ora + '\'' +
+                ", data='" + data + '\'' +
+                ", stato='" + stato + '\'' +
+                ",Corso_ID=" + Corso_ID +
                 ", Docente_ID=" + Docente_ID +
                 ", Utente_ID=" + Utente_ID +
                 ", valutazione=" + valutazione +
-                ", stato='" + stato + '\'' +
-                ", data='" + data + '\'' +
-                ", Ora='" + Ora + '\'' +
                 '}';
     }
 

@@ -1,3 +1,5 @@
 -Campo valutazione e contabile sono se lo stato della lezione e conclusa
 -Campo utente_id se è diveso da 0 lo stato della lezione e prenotata o in secondo luogo conclusa
 -Se l utente ha ruolo diverso da "docente" il suo campo stelle non e contabile
+
+- il ricalcolo delle stelle docente viene fatto ogni ora
