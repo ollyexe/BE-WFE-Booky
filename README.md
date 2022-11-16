@@ -4,6 +4,7 @@
 
 > #### *Gratii Oliviu* `944575` <a href="mailto:oliviu.gratii@edu.unito.it">`oliviu.gratii@edu.unito.it`</a>
 
+> #### *Abrate Alessandro* `952470` <a href="mailto:oliviu.gratii@edu.unito.it">`alessandro.abrate@edu.unito.it`</a>
 ## Good Practices
 ### Comments
 - Use doxygen comments 

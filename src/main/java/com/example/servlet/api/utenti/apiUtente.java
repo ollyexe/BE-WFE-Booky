@@ -7,7 +7,6 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
-import javax.xml.xpath.XPath;
 
 import Dao.*;
 import com.google.gson.Gson;
@@ -16,16 +15,16 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 @WebServlet(name = "login", value = "/apiUtente")
-public class login extends HttpServlet {
-    Dao dao;
+public class apiUtente extends HttpServlet {
+    static Dao dao;
 
 
     public void init(ServletConfig config) {
 
 
-         dao  = new Dao(config.getServletContext().getInitParameter("dbURL"),config.getServletContext().getInitParameter("dbUser"),config.getServletContext().getInitParameter("dbUserPass"));
+         dao = new Dao("jdbc:mysql://localhost:3306/db_book", "dbhelper", "73C88AAFCFC9701657356F643382EBE40E2B8660C");
 
-        getServletContext().setAttribute("Dao",dao);
+
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -40,61 +39,149 @@ public class login extends HttpServlet {
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession s = request.getSession();
+
         PrintWriter out = response.getWriter();
-        String path = request.getParameter("path");
-
-
-
-
+        System.out.println(request.getParameter("path"));
         response.setContentType("application/json");
 
 
-      switch(path){
-          case "login" : {
-              String userName = request.getParameter("mail");
-              String password = request.getParameter("pass");
-              Utente u = Dao.getUtente(userName);
-              if (u==null) {
-                  out.print("{" +
-                          "\"login_state\"" + ":" + "\"notExist\"" +
-                          "}");
-                  out.flush();
-              }
+    if(request.getParameter("path")!=null){
+        switch(request.getParameter("path")){
+            case "login" : {
+                if (dao == null) {
+                    out.println("dao is null");
+                }else {
+                    String userName = request.getParameter("mail");
+                    String password = request.getParameter("pass");
+                    Utente u = dao.getUtente(userName);
 
-              if (Dao.checkMD5(u.getPassword(), password)) {
+                    if (u == null) {
+                        out.print("{" +
+                                "\"login_state\"" + ":" + "\"not_exists\"" +" ,"+
+                                "\"state_description\"" + ":" + "\"user with this email doesnt exists\"" +
+                                "}");
+                        out.flush();
+                    }
 
-                  out.print("{" +
-                          "\"login_state\"" + ":" + "\"true\"" +
-                          "}");
-                  out.flush();
+                    else if (Dao.checkMD5(u.getPassword(), password)) {
 
+                        out.print("{" +
+                                "\"login_state\"" + ":" + "\"success\"" +" ,"+
+                                "\"state_description\"" + ":" + "\"siccessful login\"" +
 
-              }
-              else {
-                  out.print("{" +
-                          "\"login_state\"" + ":" + "\"false\"" +
-                          "}");
-                  out.flush();
-              }
-            break;
-          }
-          case "getAllDocenti" : {
-              if (dao == null) {
-                  out.println("dao is null");
-              } else {
-
-                  ArrayList<Utente> docenti = dao.getAllProfessori();
-                  Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                  String json = gson.toJson(docenti);
-                  JsonElement je = JsonParser.parseString(json);
-                  out.println("{"+"\"Docenti\" : "+gson.toJson(je)+ "}");
-                  out.flush();
+                                "}");
+                        out.flush();
 
 
-              }
-              break;
-          }
+                    } else {
+                        out.print("{" +
+                                "\"login_state\"" + ":" + "\"fail\"" +" ,"+
+                                "\"state_description\"" + ":" + "\"wrong password for provided email\"" +
+
+                                "}");
+                        out.flush();
+                    }
+                    break;
+                }
+            }
+            case "registration" : {
+                if (dao == null) {
+                    out.println("dao is null");
+                } else {
+                    String email = request.getParameter("mail");
+                    String password = request.getParameter("pass");
+                    String nome = request.getParameter("nome");
+                    String cognome = request.getParameter("cognome");
+                    //ceck temporaneo --> succesivamente con la user session si fara il check se la mail esiste gia
+                    //prima check   --> se true ritorno alla pagina login con i dati settati dalla sessione
+                    //se check false si procede con la insertion
+
+                    try {
+                        if(dao.insertUtente(new Utente(0,email,password,nome,cognome,"utente"))){
+                            out.print("{" +
+                                    "\"registration_state\"" + ":" + "\"succesful\"" +" ,"+
+                                    "\"state_description\"" + ":" + "\"user succesfuly registred\"" +
+                                    "}");
+                            out.flush();
+                        }
+                        else {
+                            out.print("{" +
+                                    "\"registration_state\"" + ":" + "\"fail\"" +" ,"+
+                                    "\"state_description\"" + ":" + "\"failed to register\"" +
+                                    "}");
+                            out.flush();
+                        }
+
+                    }
+                    catch (Error erro){
+                        out.print("{" +
+                                "\"registration_state\"" + ":" + "\"exists\"" +" ,"+
+                                "\"state_description\"" + ":" + "\"user with this email already exists\"" +
+                                "}");
+                        out.flush();
+                    }
+
+                }
+                break;
+            }
+            case "getAllDocenti" : {
+                if (dao == null) {
+                    out.println("dao is null");
+                } else {
+
+                    ArrayList<Utente> docenti = dao.getAllProfessori();
+                    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                    String json = gson.toJson(docenti);
+                    JsonElement je = JsonParser.parseString(json);
+                    out.println("{" + "\"Docenti\" : " + gson.toJson(je) + "}");
+                    out.flush();
+
+
+                }
+                break;
+            }
+            case "deleteUtente" : {
+                if (dao == null) {
+                    out.println("dao is null");
+                } else {
+                    boolean flag= false;
+                    String email = request.getParameter("mail");
+                    try {
+                        flag = dao.deleteUtente(email);
+                        if(flag){
+                            out.print("{" +
+                                    "\"delete_state\"" + ":" + "\"succes\"" +" ,"+
+                                    "\"state_description\"" + ":" + "\"user with this email was deleted\"" +
+                                    "}");
+                            out.flush();
+                        }
+                    }
+                    catch (Error error){
+                        out.print("{" +
+                                "\"delete_state\"" + ":" + "\"already\"" +" ,"+
+                                "\"state_description\"" + ":" + "\"user with this email is already deleted or doesnt exist\"" +
+                                "}");
+                        out.flush();
+                    }
+
+
+
+
+
+                }
+                break;
+
+            }
+
+
+
+
+
+        }
+    }
+    else{
+          out.println("Selected path doesnt exists ");
+          out.flush();
       }
     }
 }

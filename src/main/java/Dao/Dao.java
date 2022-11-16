@@ -6,6 +6,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 
 public class Dao {
+    
     private static String url ,user ,password;
 
     public  Dao(String url ,String user ,String password){
@@ -52,7 +53,7 @@ public class Dao {
         return null;
     }
 
-    private void closeCon(Connection con) {
+    private static void closeCon(Connection con) {
         try {
             con.close();
         } catch (SQLException e) {
@@ -88,12 +89,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
 
@@ -102,7 +98,7 @@ public class Dao {
     }
 
 
-    public static Utente getUtente(String email){
+    public Utente getUtente(String email){
         Connection con = null;
         Utente u = null;
 
@@ -110,8 +106,8 @@ public class Dao {
 
             con = Dao.getConnection();
             if(!utenteExists(email)){
-                throw new Error("Utente.getUtente().error():User with this mail doesnt  exists");
-
+                con.close();
+                return null;
             }
             PreparedStatement prs = con.prepareStatement("SELECT * FROM utente Where Email = ? ;");
             prs.setString(1, email);
@@ -129,12 +125,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
 
@@ -182,12 +173,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
 
@@ -231,12 +217,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
 
@@ -244,7 +225,7 @@ public class Dao {
     }
 
 
-    public  boolean insertUtente(Utente u) {
+    public boolean insertUtente(Utente u) {
         Connection con = null;
 
         try {
@@ -254,7 +235,7 @@ public class Dao {
                 throw new Error("Utente.insertUser.error():User with this mail already exists");
 
             }
-            PreparedStatement prs = con.prepareStatement("INSERT INTO utente (ID, Email, Password, Nome, Cognome, Ruolo, PF, Stelle,Attivo) VALUES (NULL, ?,?,?,?,?, NULL, '0','true');");
+            PreparedStatement prs = con.prepareStatement("INSERT INTO utente (ID, Email, Password, Nome, Cognome, Ruolo, PF, Stelle,Attivo) VALUES (NULL, ?,?,?,?,?, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAbBB_oglMX609dUtMkvQcL3nmKuqOQmVfR2VIj0he6Q&s', '0','true');");
             prs.setString(1, u.getEmail());
             prs.setString(2, encryptMD5(u.getPassword()));
             prs.setString(3, u.getNome());
@@ -268,12 +249,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
 
@@ -305,12 +281,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
         return existing_users.contains(email);
@@ -322,13 +293,13 @@ public class Dao {
 
         try {
             con = Dao.getConnection();
-            if(!utenteExists(email)){
-                throw new Error("Utente.deleteUtente.error():User with this mail doesnt exists");
+            if(!utenteExists(email)|| !utenteIsActive(email)){
+                throw new Error("Utente.deleteUtente.error():User with this mail doesnt exists or is already deleted");
 
             }
 
 
-            PreparedStatement prs = con.prepareStatement("UPDATE utente SET Attivo = 'false' WHERE utente.Email = ?;");
+            PreparedStatement prs = con.prepareStatement("UPDATE utente SET Attivo = 'false' WHERE utente.Email = ? AND Ruolo!='docente'AND Ruolo!='admin';");
             prs.setString(1, email);
 
 
@@ -341,12 +312,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
         if(utenteIsActive(email)){
@@ -391,12 +357,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
         return existing_users.contains(email);
@@ -431,11 +392,7 @@ public class Dao {
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             } finally {
-                try {
-                    con.close();
-                } catch (SQLException e) {
-                    System.out.println(e.getMessage());
-                }
+                closeCon(con);
 
 
             }
@@ -476,12 +433,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
 
@@ -541,12 +493,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
 
@@ -581,12 +528,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
 
@@ -619,12 +561,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
 
@@ -660,12 +597,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
         return existing_courses.contains(corso);
@@ -701,12 +633,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
         return existing_courses.contains(corso);
@@ -737,12 +664,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
         if(corsoIsActive(corso)){
@@ -786,12 +708,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
 
@@ -828,12 +745,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
 
@@ -867,12 +779,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
 
@@ -889,6 +796,9 @@ public class Dao {
         ArrayList<KeyLezione> existing_leasons = new ArrayList<>();
         try {
             con = Dao.getConnection();
+            //cec docenteexists
+
+
             kl = new KeyLezione(ora,data,Docente_ID);
             Statement st = con.createStatement();
 
@@ -907,12 +817,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
         return existing_leasons.contains(kl);
@@ -946,12 +851,7 @@ public class Dao {
             System.out.println(e.getMessage());
         }
         finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
 
@@ -995,12 +895,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
         return l;
@@ -1024,12 +919,15 @@ public class Dao {
 
             prs.executeUpdate();
 
-            con.close();
+
 
 
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+        }
+        finally {
+            closeCon(con);
         }
 
 
@@ -1061,12 +959,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
 
@@ -1098,12 +991,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
 
@@ -1136,12 +1024,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
 
@@ -1174,12 +1057,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
 
@@ -1205,12 +1083,15 @@ public class Dao {
 
             prs.executeUpdate();
 
-            con.close();
+
 
 
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+        }
+        finally {
+            closeCon(con);
         }
 
 
@@ -1218,12 +1099,13 @@ public class Dao {
 
     }
 
+    //se lezione gia valutata riscrive la vlutazione
     public boolean valutaLezione(String data, String ora, int Docente_ID,int stelle){
         Connection con = null;
 
         try {
             con = Dao.getConnection();
-            if(lezioneExists(data, ora, Docente_ID) && !isConclusa(data, ora, Docente_ID)){
+            if((!lezioneExists(data, ora, Docente_ID)) || (!isConclusa(data, ora, Docente_ID)) || ( stelle>5 || stelle<1) ){
                 throw new Error("Lezione.annullaLezione.error() : Lezione you tring to rate doent exists or is non concluded  ");
             }
 
@@ -1237,12 +1119,15 @@ public class Dao {
 
             prs.executeUpdate();
 
-            con.close();
+
 
 
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+        }
+        finally {
+            closeCon(con);
         }
 
         Lezione l = getLezione(data, ora, Docente_ID);
@@ -1255,7 +1140,6 @@ public class Dao {
         ArrayList<Lezione> dump = new ArrayList<>();
         try {
             con = Dao.getConnection();
-            Statement st = con.createStatement();
             int ID = getIDbyUtente(mail);
 
             PreparedStatement prs = con.prepareStatement("Select * From lezione Where Utente_ID = ? AND Data = ? AND Stato = 'Prenotata';");
@@ -1276,12 +1160,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
 
@@ -1317,12 +1196,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
 
@@ -1353,12 +1227,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
 
@@ -1368,14 +1237,12 @@ public class Dao {
 
     public static Corso getCorsoByNome(String corso){
         Connection con = null;
-        ArrayList<Lezione> dump = new ArrayList<>();
         Corso c=null;
         try {
             con = Dao.getConnection();
             if(!corsoExists(corso)){
                 throw new Error("Helper.getCorsoByNome.Error : Corso with this name doent exists");
             }
-            Statement st = con.createStatement();
             PreparedStatement prs = con.prepareStatement("Select * From corso Where Nome = ?;");
             prs.setString(1,corso);
 
@@ -1393,12 +1260,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
 
@@ -1413,7 +1275,6 @@ public class Dao {
         Corso c = getCorsoByNome(corso);
         try {
             con = Dao.getConnection();
-            Statement st = con.createStatement();
             int ID_corso = c.getID();
 
 
@@ -1435,12 +1296,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
 
@@ -1455,7 +1311,6 @@ public class Dao {
         Utente doc = getUtenteByID(getIDbyUtente(docente));
         try {
             con = Dao.getConnection();
-            Statement st = con.createStatement();
 
 
 
@@ -1477,12 +1332,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
+           closeCon(con);
 
         }
 
