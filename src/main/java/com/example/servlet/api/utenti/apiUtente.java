@@ -22,7 +22,8 @@ public class apiUtente extends HttpServlet {
     public void init(ServletConfig config) {
 
 
-         dao = new Dao("jdbc:mysql://localhost:3306/db_book", "dbhelper", "73C88AAFCFC9701657356F643382EBE40E2B8660C");
+        dao  = (Dao) config.getServletContext().getAttribute("Dao");
+        System.out.println(dao==null);
 
 
     }
@@ -55,31 +56,39 @@ public class apiUtente extends HttpServlet {
                     String password = request.getParameter("pass");
                     Utente u = dao.getUtente(userName);
 
-                    if (u == null) {
+                    if(u==null){
                         out.print("{" +
-                                "\"login_state\"" + ":" + "\"not_exists\"" +" ,"+
-                                "\"state_description\"" + ":" + "\"user with this email doesnt exists\"" +
+                                "\"login_state\"" + ":" + "\"other\"" +" ,"+
+                                "\"state_description\"" + ":" + "\"User not exists\"" +
+
                                 "}");
                         out.flush();
+                        break;
                     }
 
-                    else if (Dao.checkMD5(u.getPassword(), password)) {
+
+                     if (Dao.checkMD5(u.getPassword(), password)&&u!=null) {
 
                         out.print("{" +
-                                "\"login_state\"" + ":" + "\"success\"" +" ,"+
-                                "\"state_description\"" + ":" + "\"siccessful login\"" +
+                                "\"login_state\"" + ":" + "\"true\"" +" ,"+
+                                "\"state_description\"" + ":" + "\"successful login\"" +
 
                                 "}");
                         out.flush();
 
 
-                    } else {
-                        out.print("{" +
-                                "\"login_state\"" + ":" + "\"fail\"" +" ,"+
-                                "\"state_description\"" + ":" + "\"wrong password for provided email\"" +
+                    }
+                     else {
 
-                                "}");
-                        out.flush();
+
+                             out.print("{" +
+                                     "\"login_state\"" + ":" + "\"false\"" +" ,"+
+                                     "\"state_description\"" + ":" + "\"Password does not match\"" +
+
+                                     "}");
+                             out.flush();
+
+
                     }
                     break;
                 }
@@ -133,7 +142,7 @@ public class apiUtente extends HttpServlet {
                     Gson gson = new GsonBuilder().setPrettyPrinting().create();
                     String json = gson.toJson(docenti);
                     JsonElement je = JsonParser.parseString(json);
-                    out.println("{" + "\"Docenti\" : " + gson.toJson(je) + "}");
+                    out.println( gson.toJson(je) );
                     out.flush();
 
 

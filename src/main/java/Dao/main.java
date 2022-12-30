@@ -10,9 +10,7 @@ public class main {
 
 
 
-        for (Lezione l : dao.getLezioniLibereByDocente("barbero@gmail.com")){
-            System.out.println(l.toString());
-        }
+        System.out.println(dao.getMaterieByProfessore("barbero@gmail.com").toString());
     }
 
 }

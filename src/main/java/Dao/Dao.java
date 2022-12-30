@@ -9,10 +9,10 @@ public class Dao {
     
     private static String url ,user ,password;
 
-    public  Dao(String url ,String user ,String password){
-        Dao.url =url;
-        Dao.user = user;
-        Dao.password =password;
+    public Dao(String url ,String user ,String password){
+        this.url =url;
+        this.user = user;
+        this.password =password;
 
     }
 
@@ -295,7 +295,6 @@ public class Dao {
             con = Dao.getConnection();
             if(!utenteExists(email)|| !utenteIsActive(email)){
                 throw new Error("Utente.deleteUtente.error():User with this mail doesnt exists or is already deleted");
-
             }
 
 
@@ -498,6 +497,17 @@ public class Dao {
         }
 
         return -1;
+    }
+
+    public ArrayList<String> getMaterieByProfessore(String email){
+        ArrayList<Lezione> lezioni = getLezioniLibereByDocente(email);
+        ArrayList<String> materie = new ArrayList<>();
+        for (Lezione l : lezioni){
+            if(!materie.contains(getCorsoByID(l.getCorso_ID()).getNome()))
+            materie.add(getCorsoByID(l.getCorso_ID()).getNome());
+        }
+        materie.stream().distinct();
+        return materie;
     }
 
 
@@ -735,7 +745,7 @@ public class Dao {
             ResultSet rs = st.executeQuery("Select * From lezione");
 
             while (rs.next()) {
-                Lezione u = new Lezione(rs.getString("Data"), rs.getString("Ora"),rs.getString("Stato"),rs.getInt("Corso_ID"),rs.getInt("Docente_ID"),rs.getInt("Utente_ID"), rs.getInt("Valutazione"));
+                Lezione u = new Lezione(rs.getString("Data"), rs.getString("Ora"),rs.getString("Stato"),rs.getInt("Corso_ID"),rs.getInt("Docente_ID"),rs.getInt("Utente_ID"),rs.getInt("Valutazione"), rs.getDouble("prezzo"));
                 dump.add(u);
             }
 
@@ -763,11 +773,12 @@ public class Dao {
                 throw new Error("Lezione.insertLezione.error() :Lezione already exists");
             }
 
-            PreparedStatement prs = con.prepareStatement("INSERT INTO `lezione` (`Data`, `Ora`, `Stato`, `Corso_ID`, `Docente_ID`, `Utente_ID`) VALUES (?, ?, 'Libera', ?, ?, '0');");
+            PreparedStatement prs = con.prepareStatement("INSERT INTO `lezione` (`Data`, `Ora`, `Stato`, `Corso_ID`, `Docente_ID`,`prezzo`, `Utente_ID`) VALUES (?, ?, 'Libera', ?, ?,?, '0');");
             prs.setString(1, l.getData());
             prs.setString(2, l.getOra());
             prs.setInt(3, l.getCorso_ID());
             prs.setInt(4, l.getDocente_ID());
+            prs.setDouble(5, l.getPrezzo());
 
 
             prs.executeUpdate();
@@ -885,7 +896,7 @@ public class Dao {
             ResultSet rs = prs.executeQuery();
 
             if (rs.next()) {
-                l = new Lezione(rs.getString("Data"), rs.getString("Ora"), rs.getString("Stato"), rs.getInt("Corso_ID"), rs.getInt("Docente_ID"), rs.getInt("Utente_ID"), rs.getInt("Valutazione"));
+                l = new Lezione(rs.getString("Data"), rs.getString("Ora"),rs.getString("Stato"),rs.getInt("Corso_ID"),rs.getInt("Docente_ID"),rs.getInt("Utente_ID"),rs.getInt("Valutazione"), rs.getDouble("prezzo"));
 
             }
 
@@ -949,7 +960,7 @@ public class Dao {
             ResultSet rs = prs.executeQuery();
 
             while (rs.next()) {
-                Lezione u = new Lezione(rs.getString("Data"), rs.getString("Ora"),rs.getString("Stato"),rs.getInt("Corso_ID"),rs.getInt("Docente_ID"),rs.getInt("Utente_ID"),rs.getInt("Valutazione"));
+                Lezione u = new Lezione(rs.getString("Data"), rs.getString("Ora"),rs.getString("Stato"),rs.getInt("Corso_ID"),rs.getInt("Docente_ID"),rs.getInt("Utente_ID"),rs.getInt("Valutazione"), rs.getDouble("prezzo"));
                 dump.add(u);
             }
 
@@ -967,37 +978,37 @@ public class Dao {
         return dump;
     }
 
-    public ArrayList<Lezione> getLeasonsStory(String mail){
-        Connection con = null;
-        ArrayList<Lezione> dump = new ArrayList<>();
-        try {
-            con = Dao.getConnection();
-            int ID = getIDbyUtente(mail);
-
-            PreparedStatement prs = con.prepareStatement("Select * From lezione Where Utente_ID = ? AND Stato = 'Conclusa' ;");
-            prs.setInt(1,ID);
-
-
-            ResultSet rs = prs.executeQuery();
-
-            while (rs.next()) {
-                Lezione u = new Lezione(rs.getString("Data"), rs.getString("Ora"),rs.getString("Stato"),rs.getInt("Corso_ID"),rs.getInt("Docente_ID"),rs.getInt("Utente_ID"),rs.getInt("Valutazione"));
-                dump.add(u);
-            }
-
-            System.out.println("Successful Dump ");
-
-
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        } finally {
-           closeCon(con);
-
-        }
-
-
-        return dump;
-    }
+//    public ArrayList<Lezione> getLeasonsStory(String mail){
+//        Connection con = null;
+//        ArrayList<Lezione> dump = new ArrayList<>();
+//        try {
+//            con = Dao.getConnection();
+//            int ID = getIDbyUtente(mail);
+//
+//            PreparedStatement prs = con.prepareStatement("Select * From lezione Where Utente_ID = ? AND Stato = 'Conclusa' ;");
+//            prs.setInt(1,ID);
+//
+//
+//            ResultSet rs = prs.executeQuery();
+//
+//            while (rs.next()) {
+//                Lezione u = new Lezione(rs.getString("Data"), rs.getString("Ora"),rs.getString("Stato"),rs.getInt("Corso_ID"),rs.getInt("Docente_ID"),rs.getInt("Utente_ID"),rs.getInt("Valutazione"), rs.getDouble("prezzo"));
+//                dump.add(u);
+//            }
+//
+//            System.out.println("Successful Dump ");
+//
+//
+//        } catch (SQLException e) {
+//            System.out.println(e.getMessage());
+//        } finally {
+//           closeCon(con);
+//
+//        }
+//
+//
+//        return dump;
+//    }
 
     public static ArrayList<Lezione> leasonStory(){
         Connection con = null;
@@ -1014,7 +1025,7 @@ public class Dao {
             ResultSet rs = prs.executeQuery();
 
             while (rs.next()) {
-                Lezione u = new Lezione(rs.getString("Data"), rs.getString("Ora"),rs.getString("Stato"),rs.getInt("Corso_ID"),rs.getInt("Docente_ID"),rs.getInt("Utente_ID"),rs.getInt("Valutazione"));
+                Lezione u = new Lezione(rs.getString("Data"), rs.getString("Ora"),rs.getString("Stato"),rs.getInt("Corso_ID"),rs.getInt("Docente_ID"),rs.getInt("Utente_ID"),rs.getInt("Valutazione"), rs.getDouble("prezzo"));
                 dump.add(u);
             }
 
@@ -1047,7 +1058,7 @@ public class Dao {
             ResultSet rs = prs.executeQuery();
 
             while (rs.next()) {
-                Lezione u = new Lezione(rs.getString("Data"), rs.getString("Ora"),rs.getString("Stato"),rs.getInt("Corso_ID"),rs.getInt("Docente_ID"),rs.getInt("Utente_ID"),rs.getInt("Valutazione"));
+                Lezione u = new Lezione(rs.getString("Data"), rs.getString("Ora"),rs.getString("Stato"),rs.getInt("Corso_ID"),rs.getInt("Docente_ID"),rs.getInt("Utente_ID"),rs.getInt("Valutazione"), rs.getDouble("prezzo"));
                 dump.add(u);
             }
 
@@ -1150,7 +1161,7 @@ public class Dao {
             ResultSet rs = prs.executeQuery();
 
             while (rs.next()) {
-                Lezione u = new Lezione(rs.getString("Data"), rs.getString("Ora"),rs.getString("Stato"),rs.getInt("Corso_ID"),rs.getInt("Docente_ID"),rs.getInt("Utente_ID"),rs.getInt("Valutazione"));
+                Lezione u = new Lezione(rs.getString("Data"), rs.getString("Ora"),rs.getString("Stato"),rs.getInt("Corso_ID"),rs.getInt("Docente_ID"),rs.getInt("Utente_ID"),rs.getInt("Valutazione"), rs.getDouble("prezzo"));
                 dump.add(u);
             }
 
@@ -1286,7 +1297,7 @@ public class Dao {
             ResultSet rs = prs.executeQuery();
 
             while (rs.next()) {
-                Lezione u = new Lezione(rs.getString("Data"), rs.getString("Ora"),rs.getString("Stato"),rs.getInt("Corso_ID"),rs.getInt("Docente_ID"),rs.getInt("Utente_ID"), rs.getInt("Valutazione"));
+                Lezione u = new Lezione(rs.getString("Data"), rs.getString("Ora"),rs.getString("Stato"),rs.getInt("Corso_ID"),rs.getInt("Docente_ID"),rs.getInt("Utente_ID"),rs.getInt("Valutazione"), rs.getDouble("prezzo"));
                 dump.add(u);
             }
 
@@ -1322,7 +1333,7 @@ public class Dao {
             ResultSet rs = prs.executeQuery();
 
             while (rs.next()) {
-                Lezione u = new Lezione(rs.getString("Data"), rs.getString("Ora"),rs.getString("Stato"),rs.getInt("Corso_ID"),rs.getInt("Docente_ID"),rs.getInt("Utente_ID"),rs.getInt("Valutazione"));
+                Lezione u = new Lezione(rs.getString("Data"), rs.getString("Ora"),rs.getString("Stato"),rs.getInt("Corso_ID"),rs.getInt("Docente_ID"),rs.getInt("Utente_ID"),rs.getInt("Valutazione"), rs.getDouble("prezzo"));
                 dump.add(u);
             }
 

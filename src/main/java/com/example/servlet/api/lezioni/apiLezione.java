@@ -20,7 +20,7 @@ public class apiLezione extends HttpServlet {
 
     public void init(ServletConfig config) {
 
-        dao = new Dao("jdbc:mysql://localhost:3306/db_book", "dbhelper", "73C88AAFCFC9701657356F643382EBE40E2B8660C");
+        dao  = (Dao) config.getServletContext().getAttribute("Dao");
         System.out.println(dao==null);
 
     }
@@ -77,6 +77,7 @@ public class apiLezione extends HttpServlet {
                             out.println("       \"cognome_docente\" : " +"\"" + doc.getCognome() +"\"" + " ,");
                             out.println("       \"nome_studente\" : " +"\"" + stud.getNome() +"\"" + " ,");
                             out.println("       \"cognome_studente\" : " +"\"" + stud.getCognome() +"\"" +" ,");
+                            out.println("       \"prezzo\" : " +"\"" + l.getPrezzo() +"\"" + " ,");
                             out.println("       \"valutazione\" : " +"\"" + l.getValutazione() +"\"" + " ,");
                             out.println("     }");
                             if(i<lex.size()-1){
@@ -94,53 +95,53 @@ public class apiLezione extends HttpServlet {
                         break;
                     }
 
-                case "getLeasonsStory" : {
-                    if (this.dao == null) {
-                        out.println("dao is null");
-                    }
-                    else {
-
-                        String userName = request.getParameter("mail");
-                        Utente u = dao.getUtente(userName);
-                        ArrayList<Lezione> lex = dao.getLeasonsStory(userName);
-                        out.println("{");
-                        out.println("\"Nome Oggetto\"" + ":" + "\""+"Leasons Story"+ "\"" + ",");
-                        out.println("\"ID\"" + ":" + "\""+u.getID()+ "\"" + ",");
-
-                        out.println("\"Email\"" + ":" + "\""+u.getEmail()+ "\"" + ",");
-                        out.println("\"numero_lezioni\"" + ":"+ "\"" + lex.size()+ "\"" + ",");
-                        out.println("\"lezioni\" : ");
-                        out.println("[");
-                        for (int i = 0; i < lex.size() ; i++) {
-                            Lezione l = lex.get(i);
-                            Corso c = dao.getCorsoByID(l.getCorso_ID());
-                            Utente doc = dao.getUtenteByID(l.getDocente_ID());
-                            Utente stud = dao.getUtenteByID(l.getUtente_ID());
-                            out.println("     {");
-                            out.println("       \"data\" : " + "\"" +l.getData() + "\"" + " ,");
-                            out.println("       \"ora\" : " +  "\"" + l.getOra() + "\"" + " ,");
-                            out.println("       \"stato\" : " +"\"" + l.getStato() +"\"" + " ,");
-                            out.println("       \"nome_corso\": " +"\"" + c.getNome() + "\"" +" ,");
-                            out.println("       \"nome_docente\": " +"\"" + doc.getNome() +"\"" + " ,");
-                            out.println("       \"cognome_docente\" : " +"\"" + doc.getCognome() +"\"" + " ,");
-                            out.println("       \"nome_studente\" : " +"\"" + stud.getNome() +"\"" + " ,");
-                            out.println("       \"cognome_studente\" : " +"\"" + stud.getCognome() +"\""+ " ," );
-                            out.println("       \"valutazione\" : " +"\"" + l.getValutazione() +"\"" + " ,");
-                            out.println("     }");
-                            if(i<lex.size()-1){
-                                out.print(",");
-                            }
-
-                        }
-
-
-                        out.println("]");
-                        out.println("}");
-
-
-                    }
-
-                }
+//                case "getLeasonsStory" : {
+//                    if (this.dao == null) {
+//                        out.println("dao is null");
+//                    }
+//                    else {
+//
+//                        String userName = request.getParameter("mail");
+//                        Utente u = dao.getUtente(userName);
+//                        ArrayList<Lezione> lex = dao.getLeasonsStory(userName);
+//                        out.println("{");
+//                        out.println("\"Nome Oggetto\"" + ":" + "\""+"Leasons Story"+ "\"" + ",");
+//                        out.println("\"ID\"" + ":" + "\""+u.getID()+ "\"" + ",");
+//
+//                        out.println("\"Email\"" + ":" + "\""+u.getEmail()+ "\"" + ",");
+//                        out.println("\"numero_lezioni\"" + ":"+ "\"" + lex.size()+ "\"" + ",");
+//                        out.println("\"lezioni\" : ");
+//                        out.println("[");
+//                        for (int i = 0; i < lex.size() ; i++) {
+//                            Lezione l = lex.get(i);
+//                            Corso c = dao.getCorsoByID(l.getCorso_ID());
+//                            Utente doc = dao.getUtenteByID(l.getDocente_ID());
+//                            Utente stud = dao.getUtenteByID(l.getUtente_ID());
+//                            out.println("     {");
+//                            out.println("       \"data\" : " + "\"" +l.getData() + "\"" + " ,");
+//                            out.println("       \"ora\" : " +  "\"" + l.getOra() + "\"" + " ,");
+//                            out.println("       \"stato\" : " +"\"" + l.getStato() +"\"" + " ,");
+//                            out.println("       \"nome_corso\": " +"\"" + c.getNome() + "\"" +" ,");
+//                            out.println("       \"nome_docente\": " +"\"" + doc.getNome() +"\"" + " ,");
+//                            out.println("       \"cognome_docente\" : " +"\"" + doc.getCognome() +"\"" + " ,");
+//                            out.println("       \"nome_studente\" : " +"\"" + stud.getNome() +"\"" + " ,");
+//                            out.println("       \"cognome_studente\" : " +"\"" + stud.getCognome() +"\""+ " ," );
+//                            out.println("       \"prezzo\" : " +"\"" + l.getPrezzo() +"\"" + " ,");                            out.println("       \"valutazione\" : " +"\"" + l.getValutazione() +"\"" + " ,");
+//                            out.println("     }");
+//                            if(i<lex.size()-1){
+//                                out.print(",");
+//                            }
+//
+//                        }
+//
+//
+//                        out.println("]");
+//                        out.println("}");
+//
+//
+//                    }
+//
+//                }
 
                 case "getLezioniLibereByCorso" :{
                     if (this.dao == null) {
@@ -176,6 +177,7 @@ public class apiLezione extends HttpServlet {
                             out.println("       \"nome_corso\": " +"\"" + c.getNome() + "\"" +" ,");
                             out.println("       \"nome_docente\": " +"\"" + doc.getNome() +"\"" + " ,");
                             out.println("       \"cognome_docente\" : " +"\"" + doc.getCognome() +"\"" + " ,");
+                            out.println("       \"prezzo\" : " +"\"" + l.getPrezzo() +"\"" + " ,");
                             //out.println("       \"nome_studente\" : " +"\"" + stud.getNome() +"\"" + " ,");
                             //out.println("       \"cognome_studente\" : " +"\"" + stud.getCognome() +"\""+ " ," );
                             //out.println("       \"valutazione\" : " +"\"" + l.getValutazione() +"\"" + " ,");
@@ -224,6 +226,7 @@ public class apiLezione extends HttpServlet {
                             out.println("       \"nome_corso\": " +"\"" + c.getNome() + "\"" +" ,");
                             out.println("       \"nome_docente\": " +"\"" + doc.getNome() +"\"" + " ,");
                             out.println("       \"cognome_docente\" : " +"\"" + doc.getCognome() +"\"" + " ,");
+                            out.println("       \"prezzo\" : " +"\"" + l.getPrezzo() +"\"" + " ,");
 
                             out.print("}");
                             if(i<lex.size()-1){
@@ -271,6 +274,7 @@ public class apiLezione extends HttpServlet {
                             out.println("       \"cognome_docente\" : " +"\"" + doc.getCognome() +"\"" + " ,");
                             out.println("       \"nome_studente\" : " +"\"" + stud.getNome() +"\"" + " ,");
                             out.println("       \"cognome_studente\" : " +"\"" + stud.getCognome() +"\""+ " ," );
+                            out.println("       \"prezzo\" : " +"\"" + l.getPrezzo() +"\"" + " ,");
                             out.println("       \"valutazione\" : " +"\"" + l.getValutazione() +"\"" + " ,");
                             out.println("     }");
                             if(i<lex.size()-1){

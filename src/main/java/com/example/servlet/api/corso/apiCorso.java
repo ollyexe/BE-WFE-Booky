@@ -4,6 +4,7 @@ package com.example.servlet.api.corso;
 import java.io.*;
 import java.util.ArrayList;
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
@@ -17,10 +18,10 @@ import com.google.gson.JsonParser;
 public class apiCorso extends HttpServlet {
     private Dao dao;
 
-
+    @Override
     public void init(ServletConfig config) {
 
-        dao = new Dao("jdbc:mysql://localhost:3306/db_book", "dbhelper", "73C88AAFCFC9701657356F643382EBE40E2B8660C");
+        dao  = (Dao) config.getServletContext().getAttribute("Dao");
         System.out.println(dao==null);
 
     }
@@ -55,7 +56,23 @@ public class apiCorso extends HttpServlet {
                         ArrayList<Corso> corsi = dao.getAllCorsiDisponibili();
                         String json = gson.toJson(corsi);
                         JsonElement je = JsonParser.parseString(json);
-                        out.println("{"+"\"Corsi\" : "+gson.toJson(je)+ "}");
+                        out.println(gson.toJson(je));
+                        out.flush();
+
+
+                    }
+                    break;
+                }
+                case "getCorsiByProfessore" : {
+                    if (this.dao == null) {//to fix
+                        out.println("dao is null");
+                    } else {
+                        String email = request.getParameter("mail");
+                        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                        ArrayList<String> corsi = dao.getMaterieByProfessore(email);
+                        String json = gson.toJson(corsi);
+                        JsonElement je = JsonParser.parseString(json);
+                        out.println(gson.toJson(je));
                         out.flush();
 
 

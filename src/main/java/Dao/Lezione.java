@@ -1,17 +1,20 @@
 package Dao;
 
+import java.math.BigDecimal;
+
 public class Lezione {
     private int Corso_ID;
     private int Docente_ID;
     private int Utente_ID=-1;
     private int valutazione=0;
     private String stato;
+    private BigDecimal prezzo;
     private String data;
     private String Ora;
 
 
     //object to get
-    public Lezione( String data, String ora,String stato,int corso_id, int docente_id, int utente_id ,int valutazione) {
+    public Lezione( String data, String ora,String stato,int corso_id, int docente_id, int utente_id ,int valutazione,double prezzo) {
         this.Corso_ID = corso_id;
         this.Docente_ID = docente_id;
         this.Utente_ID = utente_id;
@@ -19,15 +22,18 @@ public class Lezione {
         this.data = data;
         this.Ora = ora;
         this.valutazione=valutazione;
+        this.prezzo = BigDecimal.valueOf(prezzo);
     }
 
     //object to insert
-    public Lezione( String data, String ora,String stato,int corso_id, int docente_id) {
+    public Lezione( String data, String ora,String stato,int corso_id, int docente_id,double prezzo) {
         this.Corso_ID = corso_id;
         this.Docente_ID = docente_id;
         this.stato = stato;
         this.data = data;
         this.Ora = ora;
+        this.prezzo = BigDecimal.valueOf(prezzo);
+
     }
 
 
@@ -58,13 +64,14 @@ public class Lezione {
     @Override
     public String toString() {
         return "Lezione{" +
-                ", Ora='" + Ora + '\'' +
-                ", data='" + data + '\'' +
-                ", stato='" + stato + '\'' +
-                ",Corso_ID=" + Corso_ID +
+                "Corso_ID=" + Corso_ID +
                 ", Docente_ID=" + Docente_ID +
                 ", Utente_ID=" + Utente_ID +
                 ", valutazione=" + valutazione +
+                ", stato='" + stato + '\'' +
+                ", prezzo=" + prezzo +
+                ", data='" + data + '\'' +
+                ", Ora='" + Ora + '\'' +
                 '}';
     }
 
@@ -74,5 +81,13 @@ public class Lezione {
 
     public void setValutazione(int valutazione) {
         this.valutazione = valutazione;
+    }
+
+    public double getPrezzo() {
+        return prezzo.doubleValue();
+    }
+
+    public void setPrezzo(BigDecimal prezzo) {
+        this.prezzo = prezzo;
     }
 }
