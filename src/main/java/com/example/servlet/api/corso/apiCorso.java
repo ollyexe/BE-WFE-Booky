@@ -46,34 +46,35 @@ public class apiCorso extends HttpServlet {
 
         if(request.getParameter("path")!=null){
             switch(request.getParameter("path")){
-                case "getAllCorsiDisponibili" : {
-                    if (this.dao == null) {//to fix
+                case "getAllCorsi" : {
+                    if (dao == null) {
                         out.println("dao is null");
                     } else {
 
-                        Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-                        ArrayList<Corso> corsi = dao.getAllCorsiDisponibili();
-                        String json = gson.toJson(corsi);
+                        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                        String json = gson.toJson(dao.getCorsiByDoc("all"));
                         JsonElement je = JsonParser.parseString(json);
-                        out.println(gson.toJson(je));
+                        out.println( gson.toJson(je) );
                         out.flush();
+
 
 
                     }
                     break;
                 }
-                case "getCorsiByProfessore" : {
-                    if (this.dao == null) {//to fix
+                case "getCorsiByDoc" : {
+                    if (dao == null) {
                         out.println("dao is null");
                     } else {
-                        String email = request.getParameter("mail");
+
+                        String mail = request.getParameter("mail");
                         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                        ArrayList<String> corsi = dao.getMaterieByProfessore(email);
-                        String json = gson.toJson(corsi);
+                        String json = gson.toJson(dao.getCorsiByDoc(mail));
                         JsonElement je = JsonParser.parseString(json);
-                        out.println(gson.toJson(je));
+                        out.println( gson.toJson(je) );
                         out.flush();
+
 
 
                     }

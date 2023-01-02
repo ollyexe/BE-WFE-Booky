@@ -149,6 +149,22 @@ public class apiUtente extends HttpServlet {
                 }
                 break;
             }
+            case "getDocByCorso" : {
+                if (dao == null) {
+                    out.println("dao is null");
+                } else {
+                    String corso = request.getParameter("corso");
+                    ArrayList<Utente> docenti = dao.getDocByCorso(corso);
+                    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                    String json = gson.toJson(docenti);
+                    JsonElement je = JsonParser.parseString(json);
+                    out.println( gson.toJson(je) );
+                    out.flush();
+
+
+                }
+                break;
+            }
             case "deleteUtente" : {
                 if (dao == null) {
                     out.println("dao is null");
@@ -181,6 +197,7 @@ public class apiUtente extends HttpServlet {
                 break;
 
             }
+
 
 
 

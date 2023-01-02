@@ -499,16 +499,7 @@ public class Dao {
         return -1;
     }
 
-    public ArrayList<String> getMaterieByProfessore(String email){
-        ArrayList<Lezione> lezioni = getLezioniLibereByDocente(email);
-        ArrayList<String> materie = new ArrayList<>();
-        for (Lezione l : lezioni){
-            if(!materie.contains(getCorsoByID(l.getCorso_ID()).getNome()))
-            materie.add(getCorsoByID(l.getCorso_ID()).getNome());
-        }
-        materie.stream().distinct();
-        return materie;
-    }
+
 
 
 
@@ -1193,7 +1184,7 @@ public class Dao {
             con = Dao.getConnection();
             Statement st = con.createStatement();
 
-            ResultSet rs = st.executeQuery("Select * From utente Where ruolo = 'docente';");
+            ResultSet rs = st.executeQuery("Select * From utente Where ruolo = 'docente' AND Attivo='true';");
 
             while (rs.next()) {
 
@@ -1214,37 +1205,35 @@ public class Dao {
 
         return docenti;
     }
-
-    public ArrayList<Corso> getAllCorsiDisponibili(){
+    public ArrayList<Utente> getDocByCorso(String corso){
         Connection con = null;
-
-        ArrayList<Corso> corsi_disponibili = new ArrayList<>();
+        ArrayList<Utente> docenti = new ArrayList<>();
         try {
             con = Dao.getConnection();
-            Statement st = con.createStatement();
-
-            ResultSet rs = st.executeQuery("Select distinct(Corso_ID) From lezione WHERE Stato = 'Libera';");
+            PreparedStatement prs = con.prepareStatement("call getDocByCorso(?);");
+            prs.setString(1,corso);
+            ResultSet rs = prs.executeQuery();
 
             while (rs.next()) {
 
-                Corso c =getCorsoByID(rs.getInt("Corso_ID"));
-                corsi_disponibili.add(c);
+                Utente u = new Utente(rs.getInt("ID"), rs.getString("Email"), rs.getString("Password"),rs.getString("Nome"),rs.getString("Cognome"),rs.getString("Ruolo"),rs.getString("PF"),rs.getDouble("Stelle"), rs.getString("Attivo"));
+                docenti.add(u);
             }
 
-
-            System.out.println("Successful Dump getAllCorsiDisponibili");
+            System.out.println("Successful Dump getAllProfessori");
 
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-           closeCon(con);
+            closeCon(con);
 
         }
 
 
-        return corsi_disponibili;
+        return docenti;
     }
+
 
     public static Corso getCorsoByNome(String corso){
         Connection con = null;
@@ -1349,6 +1338,76 @@ public class Dao {
 
 
         return dump;
+    }
+    public ArrayList<Lezione> getLezioniLibereByDocenteAndCorso(String docente,String corso) {
+        Connection con = null;
+        ArrayList<Lezione> dump = new ArrayList<>();
+        Utente doc = getUtenteByID(getIDbyUtente(docente));
+        Corso cor= getCorsoByNome(corso);
+        try {
+            con = Dao.getConnection();
+
+
+
+            PreparedStatement prs = con.prepareStatement("Select * From lezione Where Docente_ID = ? AND Corso_ID=? AND Stato = 'Libera' ;");
+            prs.setInt(1,doc.getID());
+            prs.setInt(2,cor.getID());
+
+
+
+            ResultSet rs = prs.executeQuery();
+
+            while (rs.next()) {
+                Lezione u = new Lezione(rs.getString("Data"), rs.getString("Ora"),rs.getString("Stato"),rs.getInt("Corso_ID"),rs.getInt("Docente_ID"),rs.getInt("Utente_ID"),rs.getInt("Valutazione"), rs.getDouble("prezzo"));
+                dump.add(u);
+            }
+
+            System.out.println("Successful Dump ");
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            closeCon(con);
+
+        }
+
+
+        return dump;
+    }
+
+    public ArrayList<String> getCorsiByDoc(String docente) {
+        Connection con = null;
+        ArrayList<String> corsi = new ArrayList<>();
+        try {
+            con = Dao.getConnection();
+
+
+
+            PreparedStatement prs = con.prepareStatement("CALL getCorsiByDoc(?)");
+            prs.setString(1,docente);
+
+
+
+
+            ResultSet rs = prs.executeQuery();
+
+            while (rs.next()) {
+                corsi.add(rs.getString("Corsi"));
+            }
+
+            System.out.println("Successful Dump ");
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            closeCon(con);
+
+        }
+
+
+        return corsi;
     }
 
     //Helper

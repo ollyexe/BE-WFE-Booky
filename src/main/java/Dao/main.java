@@ -9,8 +9,8 @@ public class main {
 
 
 
+    System.out.println(dao.getDocByCorso("Algoritmi"));
 
-        System.out.println(dao.getMaterieByProfessore("barbero@gmail.com").toString());
     }
 
 }
