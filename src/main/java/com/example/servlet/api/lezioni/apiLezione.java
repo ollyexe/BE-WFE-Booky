@@ -349,7 +349,7 @@ public class apiLezione extends HttpServlet {
                             if(flag){
                                 out.print("{" +
                                         "\"rate_state\"" + ":" + "\"succes\"" +" ,"+
-                                        "\"state_description\"" + ":" + "\"lezione was rated\"" +
+                                        "\"state_description\"" + ":" + "\"lezione  rated\"" +
                                         "}");
                                 out.flush();
                             }
@@ -357,7 +357,7 @@ public class apiLezione extends HttpServlet {
                         catch (Error error){
                             out.print("{" +
                                     "\"rate_state\"" + ":" + "\"already\"" +" ,"+
-                                    "\"state_description\"" + ":" + "\"this lezione  is already valuatata or doesnt exist or rate is 0(cant be)\"" +
+                                    "\"state_description\"" + ":" + "\"this lezione  is already rated or doesnt exist or rate is 0(cant be)\"" +
                                     "}");
                             out.flush();
                         }
@@ -397,7 +397,7 @@ public class apiLezione extends HttpServlet {
                         catch (Error error){
                             out.print("{" +
                                     "\"book_state\"" + ":" + "\"false\"" +" ,"+
-                                    "\"state_description\"" + ":" + "\"this lezione  is already booked or doesnt exist or rate is 0(cant be)\"" +
+                                    "\"state_description\"" + ":" + "\"this lezione  is already booked or doesnt exist \"" +
                                     "}");
                             out.flush();
                         }
@@ -410,6 +410,85 @@ public class apiLezione extends HttpServlet {
                     break;
 
                 }
+                case "annullaLezione" : {
+                    if (dao == null) {
+                        out.println("dao is null");
+                    } else {
+                        boolean flag= false;
+                        String data = request.getParameter("data");
+                        String ora = request.getParameter("ora");
+                        String docente =  request.getParameter("docente");
+
+                        int Docente_ID = Dao.getIDbyUtente(request.getParameter("docente"));
+
+
+
+                        try {
+                            flag = dao.annullaLezione(data,ora,Docente_ID);
+                            if(flag){
+                                out.print("{" +
+                                        "\"cancell_state\"" + ":" + "\"true\"" +" ,"+
+                                        "\"state_description\"" + ":" + "\"lezione canceled\"" +
+                                        "}");
+                                out.flush();
+                            }
+                        }
+                        catch (Error error){
+                            out.print("{" +
+                                    "\"cancell_state\"" + ":" + "\"false\"" +" ,"+
+                                    "\"state_description\"" + ":" + "\"this lezione  is already canceled or doesnt exist \"" +
+                                    "}");
+                            out.flush();
+                        }
+
+
+
+
+
+                    }
+                    break;
+
+                }
+                case "concludiLezione" : {
+                    if (dao == null) {
+                        out.println("dao is null");
+                    } else {
+                        boolean flag= false;
+                        String data = request.getParameter("data");
+                        String ora = request.getParameter("ora");
+                        String docente =  request.getParameter("docente");
+
+                        int Docente_ID = Dao.getIDbyUtente(request.getParameter("docente"));
+
+
+
+                        try {
+                            flag = dao.concludiLezione(data,ora,Docente_ID);
+                            if(flag){
+                                out.print("{" +
+                                        "\"cancell_state\"" + ":" + "\"true\"" +" ,"+
+                                        "\"state_description\"" + ":" + "\"lezione finished\"" +
+                                        "}");
+                                out.flush();
+                            }
+                        }
+                        catch (Error error){
+                            out.print("{" +
+                                    "\"cancell_state\"" + ":" + "\"false\"" +" ,"+
+                                    "\"state_description\"" + ":" + "\"this lezione  is already finished or doesnt exist \"" +
+                                    "}");
+                            out.flush();
+                        }
+
+
+
+
+
+                    }
+                    break;
+
+                }
+
 
 
 

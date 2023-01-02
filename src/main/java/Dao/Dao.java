@@ -830,7 +830,7 @@ public class Dao {
         Lezione l= null;
         try {
             con = Dao.getConnection();
-            if(isPrenotata(data,ora,Docente_ID) ){
+            if(isPrenotata(data,ora,Docente_ID) || isConclusa(data,ora,Docente_ID)){
                 throw new Error("Lezione.prenotaLezione.error() : Lezione is already prenotata");
             }
             // se non esiste spunta un null pointer exception
@@ -908,7 +908,7 @@ public class Dao {
 
         try {
             con = Dao.getConnection();
-            if(lezioneExists(data, ora, Docente_ID)){
+            if(!lezioneExists(data, ora, Docente_ID) || isConclusa(data, ora, Docente_ID) ){
                 throw new Error("Lezione.annullaLezione.error() : Lezione you tring to cancell doent exists ");
             }
 
@@ -932,7 +932,7 @@ public class Dao {
             closeCon(con);
         }
 
-
+        System.out.println(isPrenotata(data, ora, Docente_ID));
         return (!isPrenotata(data, ora, Docente_ID));
     }
 
@@ -1072,7 +1072,7 @@ public class Dao {
 
         try {
             con = Dao.getConnection();
-            if(lezioneExists(data, ora, Docente_ID) && !isPrenotata(data, ora, Docente_ID)){
+            if(!lezioneExists(data, ora, Docente_ID) || !isPrenotata(data, ora, Docente_ID)){
                 throw new Error("Lezione.annullaLezione.error() : Lezione you tring to conclude doent exists ");
             }
 
@@ -1108,6 +1108,7 @@ public class Dao {
         try {
             con = Dao.getConnection();
             if((!lezioneExists(data, ora, Docente_ID)) || (!isConclusa(data, ora, Docente_ID)) || ( stelle>5 || stelle<1) ){
+
                 throw new Error("Lezione.annullaLezione.error() : Lezione you tring to rate doent exists or is non concluded  ");
             }
 
