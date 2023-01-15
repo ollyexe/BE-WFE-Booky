@@ -98,6 +98,39 @@ public class Dao {
     }
 
 
+    public Utente getMiniUtente(String email){
+        Connection con = null;
+        Utente u = null;
+
+        try {
+
+            con = Dao.getConnection();
+            if(!utenteExists(email)){
+                con.close();
+                return null;
+            }
+            PreparedStatement prs = con.prepareStatement("CALL getUtente(?) ;");
+            prs.setString(1, email);
+            ResultSet rs = prs.executeQuery();
+
+            if(rs.next()){
+                u = new Utente(rs.getString("Nome"),rs.getString("Cognome"),rs.getString("Ruolo"),rs.getString("PF"));
+
+            }
+
+
+
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            closeCon(con);
+
+        }
+
+        return u;
+    }
     public Utente getUtente(String email){
         Connection con = null;
         Utente u = null;
@@ -944,7 +977,7 @@ public class Dao {
             con = Dao.getConnection();
             int ID = getIDbyUtente(mail);
 
-            PreparedStatement prs = con.prepareStatement("Select * From lezione Where Utente_ID = ?;");
+            PreparedStatement prs = con.prepareStatement("Select * From lezione Where Utente_ID = ? AND Stato='Prenotata' ORDER BY Data ASC ;");
             prs.setInt(1,ID);
 
 
@@ -962,6 +995,38 @@ public class Dao {
             System.out.println(e.getMessage());
         } finally {
            closeCon(con);
+
+        }
+
+
+        return dump;
+    }
+
+    public ArrayList<Lezione> getLeasonStory(String mail){
+        Connection con = null;
+        ArrayList<Lezione> dump = new ArrayList<>();
+        try {
+            con = Dao.getConnection();
+            int ID = getIDbyUtente(mail);
+
+            PreparedStatement prs = con.prepareStatement("Select * From lezione Where Utente_ID = ? AND Stato='Conclusa';");
+            prs.setInt(1,ID);
+
+
+            ResultSet rs = prs.executeQuery();
+
+            while (rs.next()) {
+                Lezione u = new Lezione(rs.getString("Data"), rs.getString("Ora"),rs.getString("Stato"),rs.getInt("Corso_ID"),rs.getInt("Docente_ID"),rs.getInt("Utente_ID"),rs.getInt("Valutazione"), rs.getDouble("prezzo"));
+                dump.add(u);
+            }
+
+            System.out.println("Successful Dump getLezioneByUtente");
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            closeCon(con);
 
         }
 
@@ -1001,39 +1066,7 @@ public class Dao {
 //        return dump;
 //    }
 
-    public static ArrayList<Lezione> leasonStory(){
-        Connection con = null;
-        ArrayList<Lezione> dump = new ArrayList<>();
-        try {
-            con = Dao.getConnection();
-            assert con != null;
 
-
-            PreparedStatement prs = con.prepareStatement("Select * From lezione Where Stato = 'Conclusa' ;");
-
-
-
-            ResultSet rs = prs.executeQuery();
-
-            while (rs.next()) {
-                Lezione u = new Lezione(rs.getString("Data"), rs.getString("Ora"),rs.getString("Stato"),rs.getInt("Corso_ID"),rs.getInt("Docente_ID"),rs.getInt("Utente_ID"),rs.getInt("Valutazione"), rs.getDouble("prezzo"));
-                dump.add(u);
-            }
-
-            System.out.println("Successful Dump ");
-
-
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        } finally {
-           closeCon(con);
-
-        }
-
-
-        return dump;
-
-    }
 
     public static ArrayList<Lezione> getLeasonsStoryByDocente(String mail){
         Connection con = null;
@@ -1185,7 +1218,7 @@ public class Dao {
             con = Dao.getConnection();
             Statement st = con.createStatement();
 
-            ResultSet rs = st.executeQuery("Select * From utente Where ruolo = 'docente' AND Attivo='true';");
+            ResultSet rs = st.executeQuery("Call getAllDocenti();");
 
             while (rs.next()) {
 
@@ -1227,6 +1260,7 @@ public class Dao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
+
             closeCon(con);
 
         }
@@ -1376,6 +1410,42 @@ public class Dao {
 
         return dump;
     }
+
+    public ArrayList<Lezione> getLezioniLibere() {
+        Connection con = null;
+        ArrayList<Lezione> dump = new ArrayList<>();
+
+        try {
+            con = Dao.getConnection();
+
+
+
+            PreparedStatement prs = con.prepareStatement("Select * From lezione Where Stato = 'Libera' ;");
+
+
+
+
+            ResultSet rs = prs.executeQuery();
+
+            while (rs.next()) {
+                Lezione u = new Lezione(rs.getString("Data"), rs.getString("Ora"),rs.getString("Stato"),rs.getInt("Corso_ID"),rs.getInt("Docente_ID"),rs.getInt("Utente_ID"),rs.getInt("Valutazione"), rs.getDouble("prezzo"));
+                dump.add(u);
+            }
+
+            System.out.println("Successful Dump ");
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            closeCon(con);
+
+        }
+
+
+        return dump;
+    }
+
 
     public ArrayList<String> getCorsiByDoc(String docente) {
         Connection con = null;

@@ -8,10 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import Dao.*;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+
 
 @WebServlet(name = "apiLezione", value = "/apiLezione")
 public class apiLezione extends HttpServlet {
@@ -54,33 +51,75 @@ public class apiLezione extends HttpServlet {
                         String userName = request.getParameter("mail");
                         Utente u = dao.getUtente(userName);
                         ArrayList<Lezione> lex = dao.getLezioneByUtenteAndByDay(userName,date);
+                       if(lex.size()==0){
 
-                        out.println("{");
-                        out.println("\"Nome Oggetto\"" + ":" + "\""+"Leasons By Utente And By Date"+ "\"" + ",");
-                        out.println("\"ID\"" + ":" + "\""+u.getID()+ "\"" + ",");
-                        out.println("\"Email\"" + ":" + "\""+u.getEmail()+ "\"" + ",");
-                        out.println("\"Data\"" + ":" + "\""+date+ "\"" + ",");
-                        out.println("\"numero_lezioni\"" + ":"+ "\"" + lex.size()+ "\"" + ",");
-                        out.println("\"lezioni\" : ");
+                       }
+                       else {
+                           int j = 0;
+                           out.println("[");
+                           for (int i = 0; i < lex.size() ; i++) {
+                               Lezione l = lex.get(i);
+                               Corso c = dao.getCorsoByID(l.getCorso_ID());
+                               Utente doc = dao.getUtenteByID(l.getDocente_ID());
+                               out.println("     {");
+                               out.println("       \"data\" : " + "\"" +l.getData() + "\"" + " ,");
+                               out.println("       \"ora\" : " +  "\"" + l.getOra() + "\"" + " ,");
+                               out.println("       \"nome_corso\": " +"\"" + c.getNome() + "\"" +" ,");
+                               out.println("       \"nome_docente\": " +"\"" + doc.getNome() +"\"" + " ,");
+                               out.println("       \"cognome_docente\" : " +"\"" + doc.getCognome() +"\"" + " ,");
+                               out.println("       \"email\" : " +"\"" + doc.getEmail() +"\"" + " ,");
+                               out.println("       \"valutazione\" : " +"\"" + l.getValutazione() +"\"" + " ,");
+
+                               out.println("       \"pf\" : " +"\"" + doc.getPf() +"\"" + " ,");
+                               out.println("       \"stelle\" : " +"\"" + doc.getStelle() +"\"" + " ,");
+                               out.println("       \"prezzo\" : " +"\"" + l.getPrezzo() +"\"" );
+                               out.println("     }");
+                               if(j<lex.size()-1){
+                                   j++;
+                                   out.print(",");
+                               }
+
+                           }
+
+
+                           out.println("]");
+                       }
+
+
+                    }
+                        break;
+                    }
+
+                case "getLezioniFinite" : {
+                    if (this.dao == null) {
+                        out.println("dao is null");
+                    }
+                    else {
+
+                        String userName = request.getParameter("mail");
+                        ArrayList<Lezione> lex = dao.getLeasonStory(userName);
+                        int j = 0;
+
                         out.println("[");
                         for (int i = 0; i < lex.size() ; i++) {
                             Lezione l = lex.get(i);
                             Corso c = dao.getCorsoByID(l.getCorso_ID());
                             Utente doc = dao.getUtenteByID(l.getDocente_ID());
-                            Utente stud = dao.getUtenteByID(l.getUtente_ID());
                             out.println("     {");
                             out.println("       \"data\" : " + "\"" +l.getData() + "\"" + " ,");
                             out.println("       \"ora\" : " +  "\"" + l.getOra() + "\"" + " ,");
-                            out.println("       \"stato\" : " +"\"" + l.getStato() +"\"" + " ,");
                             out.println("       \"nome_corso\": " +"\"" + c.getNome() + "\"" +" ,");
                             out.println("       \"nome_docente\": " +"\"" + doc.getNome() +"\"" + " ,");
                             out.println("       \"cognome_docente\" : " +"\"" + doc.getCognome() +"\"" + " ,");
-                            out.println("       \"nome_studente\" : " +"\"" + stud.getNome() +"\"" + " ,");
-                            out.println("       \"cognome_studente\" : " +"\"" + stud.getCognome() +"\"" +" ,");
-                            out.println("       \"prezzo\" : " +"\"" + l.getPrezzo() +"\"" + " ,");
+                            out.println("       \"email\" : " +"\"" + doc.getEmail() +"\"" + " ,");
                             out.println("       \"valutazione\" : " +"\"" + l.getValutazione() +"\"" + " ,");
+
+                            out.println("       \"pf\" : " +"\"" + doc.getPf() +"\"" + " ,");
+                            out.println("       \"stelle\" : " +"\"" + doc.getStelle() +"\"" + " ,");
+                            out.println("       \"prezzo\" : " +"\"" + l.getPrezzo() +"\"" );
                             out.println("     }");
-                            if(i<lex.size()-1){
+                            if(j<lex.size()-1){
+                                j++;
                                 out.print(",");
                             }
 
@@ -88,60 +127,53 @@ public class apiLezione extends HttpServlet {
 
 
                         out.println("]");
-                        out.println("}");
 
+                        out.flush();
 
                     }
-                        break;
-                    }
+                    break;
+                }
 
-//                case "getLeasonsStory" : {
-//                    if (this.dao == null) {
-//                        out.println("dao is null");
-//                    }
-//                    else {
-//
-//                        String userName = request.getParameter("mail");
-//                        Utente u = dao.getUtente(userName);
-//                        ArrayList<Lezione> lex = dao.getLeasonsStory(userName);
-//                        out.println("{");
-//                        out.println("\"Nome Oggetto\"" + ":" + "\""+"Leasons Story"+ "\"" + ",");
-//                        out.println("\"ID\"" + ":" + "\""+u.getID()+ "\"" + ",");
-//
-//                        out.println("\"Email\"" + ":" + "\""+u.getEmail()+ "\"" + ",");
-//                        out.println("\"numero_lezioni\"" + ":"+ "\"" + lex.size()+ "\"" + ",");
-//                        out.println("\"lezioni\" : ");
-//                        out.println("[");
-//                        for (int i = 0; i < lex.size() ; i++) {
-//                            Lezione l = lex.get(i);
-//                            Corso c = dao.getCorsoByID(l.getCorso_ID());
-//                            Utente doc = dao.getUtenteByID(l.getDocente_ID());
-//                            Utente stud = dao.getUtenteByID(l.getUtente_ID());
-//                            out.println("     {");
-//                            out.println("       \"data\" : " + "\"" +l.getData() + "\"" + " ,");
-//                            out.println("       \"ora\" : " +  "\"" + l.getOra() + "\"" + " ,");
-//                            out.println("       \"stato\" : " +"\"" + l.getStato() +"\"" + " ,");
-//                            out.println("       \"nome_corso\": " +"\"" + c.getNome() + "\"" +" ,");
-//                            out.println("       \"nome_docente\": " +"\"" + doc.getNome() +"\"" + " ,");
-//                            out.println("       \"cognome_docente\" : " +"\"" + doc.getCognome() +"\"" + " ,");
-//                            out.println("       \"nome_studente\" : " +"\"" + stud.getNome() +"\"" + " ,");
-//                            out.println("       \"cognome_studente\" : " +"\"" + stud.getCognome() +"\""+ " ," );
-//                            out.println("       \"prezzo\" : " +"\"" + l.getPrezzo() +"\"" + " ,");                            out.println("       \"valutazione\" : " +"\"" + l.getValutazione() +"\"" + " ,");
-//                            out.println("     }");
-//                            if(i<lex.size()-1){
-//                                out.print(",");
-//                            }
-//
-//                        }
-//
-//
-//                        out.println("]");
-//                        out.println("}");
-//
-//
-//                    }
-//
-//                }
+                case "getLezioniLibere" : {
+                    if (this.dao == null) {
+                        out.println("dao is null");
+                    }
+                    else {
+                        ArrayList<Lezione> lex = dao.getLezioniLibere();
+                        int j = 0;
+
+                        out.println("[");
+                        for (int i = 0; i < lex.size() ; i++) {
+                            Lezione l = lex.get(i);
+                            Corso c = dao.getCorsoByID(l.getCorso_ID());
+                            Utente doc = dao.getUtenteByID(l.getDocente_ID());
+                            out.println("     {");
+                            out.println("       \"data\" : " + "\"" +l.getData() + "\"" + " ,");
+                            out.println("       \"ora\" : " +  "\"" + l.getOra() + "\"" + " ,");
+                            out.println("       \"nome_corso\": " +"\"" + c.getNome() + "\"" +" ,");
+                            out.println("       \"nome_docente\": " +"\"" + doc.getNome() +"\"" + " ,");
+                            out.println("       \"cognome_docente\" : " +"\"" + doc.getCognome() +"\"" + " ,");
+                            out.println("       \"email\" : " +"\"" + doc.getEmail() +"\"" + " ,");
+                            out.println("       \"valutazione\" : " +"\"" + l.getValutazione() +"\"" + " ,");
+                            out.println("       \"pf\" : " +"\"" + doc.getPf() +"\"" + " ,");
+                            out.println("       \"stelle\" : " +"\"" + doc.getStelle() +"\"" + " ,");
+                            out.println("       \"prezzo\" : " +"\"" + l.getPrezzo() +"\"" );
+                            out.println("     }");
+                            if(j<lex.size()-1){
+                                j++;
+                                out.print(",");
+                            }
+
+                        }
+
+
+                        out.println("]");
+
+                        out.flush();
+
+                    }
+                    break;
+                }
 
                 case "getLezioniLibereByCorso" :{
                     if (this.dao == null) {
@@ -176,6 +208,9 @@ public class apiLezione extends HttpServlet {
                             out.println("       \"stato\" : " +"\"" + l.getStato() +"\"" + " ,");
                             out.println("       \"nome_corso\": " +"\"" + c.getNome() + "\"" +" ,");
                             out.println("       \"nome_docente\": " +"\"" + doc.getNome() +"\"" + " ,");
+                            out.println("       \"email\" : " +"\"" + doc.getEmail() +"\"" + " ,");
+                            out.println("       \"valutazione\" : " +"\"" + l.getValutazione() +"\"" + " ,");
+
                             out.println("       \"cognome_docente\" : " +"\"" + doc.getCognome() +"\"" + " ,");
                             out.println("       \"prezzo\" : " +"\"" + l.getPrezzo() +"\"" + " ,");
                             //out.println("       \"nome_studente\" : " +"\"" + stud.getNome() +"\"" + " ,");
@@ -196,49 +231,7 @@ public class apiLezione extends HttpServlet {
                     }
                 }
 
-                case "getLezioniByDocente": {
-                    if (this.dao == null) {
 
-                        out.println("dao is null");
-                    }
-                    else {
-                        String docente = request.getParameter("docente");
-                        ArrayList<Lezione> lex = dao.getLezioniLibereByDocente(docente);
-
-                        out.println("[");
-                        for (int i = 0; i < lex.size() ; i++) {
-                            Lezione l = lex.get(i);
-                            Corso c = dao.getCorsoByID(l.getCorso_ID());
-                            Utente doc = dao.getUtenteByID(l.getDocente_ID());
-
-
-
-                            out.println("     {");
-                            out.println("       \"data\" : " + "\"" +l.getData() + "\"" + " ,");
-                            out.println("       \"ora\" : " +  "\"" + l.getOra() + "\"" + " ,");
-                            out.println("       \"prezzo\" : " +"\"" + l.getPrezzo() +"\"" + " ,");
-                            //out.println("       \"stato\" : " +"\"" + l.getStato() +"\"" + " ,");
-                            out.println("       \"nome_corso\": " +"\"" + c.getNome() + "\"" +" ,");
-                            out.println("       \"nome_docente\": " +"\"" + doc.getNome() +"\"" + " ,");
-                            out.println("       \"cognome_docente\" : " +"\"" + doc.getCognome() +"\"" + " ,");
-                            out.println("       \"pf_docente\" : " +"\"" + doc.getPf() +"\"");
-
-
-                            out.print("}");
-                            if(i<lex.size()-1){
-                                out.print(",");
-                            }
-
-                        }
-
-
-                        out.println("]");
-
-
-
-                    }
-                    break;
-                }
 
                 case "getLezioniByDocenteAndCorso": {
                     if (this.dao == null) {
@@ -249,35 +242,34 @@ public class apiLezione extends HttpServlet {
                         String docente = request.getParameter("docente");
                         String corso = request.getParameter("corso");
                         ArrayList<Lezione> lex = dao.getLezioniLibereByDocenteAndCorso(docente,corso);
-
+                        int j =0;
                         out.println("[");
                         for (int i = 0; i < lex.size() ; i++) {
                             Lezione l = lex.get(i);
                             Corso c = dao.getCorsoByID(l.getCorso_ID());
                             Utente doc = dao.getUtenteByID(l.getDocente_ID());
-
-
-
                             out.println("     {");
                             out.println("       \"data\" : " + "\"" +l.getData() + "\"" + " ,");
                             out.println("       \"ora\" : " +  "\"" + l.getOra() + "\"" + " ,");
-                            out.println("       \"prezzo\" : " +"\"" + l.getPrezzo() +"\"" + " ,");
-                            //out.println("       \"stato\" : " +"\"" + l.getStato() +"\"" + " ,");
                             out.println("       \"nome_corso\": " +"\"" + c.getNome() + "\"" +" ,");
                             out.println("       \"nome_docente\": " +"\"" + doc.getNome() +"\"" + " ,");
                             out.println("       \"cognome_docente\" : " +"\"" + doc.getCognome() +"\"" + " ,");
-                            out.println("       \"pf_docente\" : " +"\"" + doc.getPf() +"\"");
+                            out.println("       \"email\" : " +"\"" + doc.getEmail() +"\"" + " ,");
+                            out.println("       \"valutazione\" : " +"\"" + l.getValutazione() +"\"" + " ,");
 
-
-                            out.print("}");
-                            if(i<lex.size()-1){
+                            out.println("       \"pf\" : " +"\"" + doc.getPf() +"\"" + " ,");
+                            out.println("       \"stelle\" : " +"\"" + doc.getStelle() +"\"" + " ,");
+                            out.println("       \"prezzo\" : " +"\"" + l.getPrezzo() +"\"" );
+                            out.println("     }");
+                            if(j<lex.size()-1){
+                                j++;
                                 out.print(",");
                             }
-
                         }
 
 
                         out.println("]");
+                        out.flush();
 
 
 
@@ -285,41 +277,36 @@ public class apiLezione extends HttpServlet {
                     break;
                 }
 
-                case "getLezioniPrenotate" : {
+                case "getNextLezioniPrenotate" : {
                     if (this.dao == null) {
                       out.println("dao is null");
                     }
                     else {
 
                         String userName = request.getParameter("mail");
-                        Utente u = dao.getUtente(userName);
                         ArrayList<Lezione> lex = dao.getLezioneByUtente(userName);
-                        out.println("{");
-                        out.println("\"Nome Oggetto\"" + ":" + "\""+"Prenotazioni All"+ "\"" + ",");
-                        out.println("\"ID\"" + ":" + "\""+u.getID()+ "\"" + ",");
+                        int j = 0;
 
-                        out.println("\"Email\"" + ":" + "\""+u.getEmail()+ "\"" + ",");
-                        out.println("\"numero_lezioni\"" + ":"+ "\"" + lex.size()+ "\"" + ",");
-                        out.println("\"lezioni\" : ");
                         out.println("[");
                         for (int i = 0; i < lex.size() ; i++) {
                             Lezione l = lex.get(i);
                             Corso c = dao.getCorsoByID(l.getCorso_ID());
                             Utente doc = dao.getUtenteByID(l.getDocente_ID());
-                            Utente stud = dao.getUtenteByID(l.getUtente_ID());
                             out.println("     {");
                             out.println("       \"data\" : " + "\"" +l.getData() + "\"" + " ,");
                             out.println("       \"ora\" : " +  "\"" + l.getOra() + "\"" + " ,");
-                            out.println("       \"stato\" : " +"\"" + l.getStato() +"\"" + " ,");
                             out.println("       \"nome_corso\": " +"\"" + c.getNome() + "\"" +" ,");
                             out.println("       \"nome_docente\": " +"\"" + doc.getNome() +"\"" + " ,");
                             out.println("       \"cognome_docente\" : " +"\"" + doc.getCognome() +"\"" + " ,");
-                            out.println("       \"nome_studente\" : " +"\"" + stud.getNome() +"\"" + " ,");
-                            out.println("       \"cognome_studente\" : " +"\"" + stud.getCognome() +"\""+ " ," );
-                            out.println("       \"prezzo\" : " +"\"" + l.getPrezzo() +"\"" + " ,");
+                            out.println("       \"email\" : " +"\"" + doc.getEmail() +"\"" + " ,");
                             out.println("       \"valutazione\" : " +"\"" + l.getValutazione() +"\"" + " ,");
+
+                            out.println("       \"pf\" : " +"\"" + doc.getPf() +"\"" + " ,");
+                            out.println("       \"stelle\" : " +"\"" + doc.getStelle() +"\"" + " ,");
+                            out.println("       \"prezzo\" : " +"\"" + l.getPrezzo() +"\"" );
                             out.println("     }");
-                            if(i<lex.size()-1){
+                            if(j<lex.size()-1){
+                                j++;
                                 out.print(",");
                             }
 
@@ -327,10 +314,11 @@ public class apiLezione extends HttpServlet {
 
 
                         out.println("]");
-                        out.println("}");
 
+                        out.flush();
 
                     }
+                    break;
                 }
 
                 case "valutaLezione" : {
@@ -426,18 +414,16 @@ public class apiLezione extends HttpServlet {
                         try {
                             flag = dao.annullaLezione(data,ora,Docente_ID);
                             if(flag){
-                                out.print("{" +
-                                        "\"cancell_state\"" + ":" + "\"true\"" +" ,"+
-                                        "\"state_description\"" + ":" + "\"lezione canceled\"" +
-                                        "}");
+                                out.print("[" +
+                                         "\"true\"" +
+                                        "]");
                                 out.flush();
                             }
                         }
                         catch (Error error){
-                            out.print("{" +
-                                    "\"cancell_state\"" + ":" + "\"false\"" +" ,"+
-                                    "\"state_description\"" + ":" + "\"this lezione  is already canceled or doesnt exist \"" +
-                                    "}");
+                            out.print("[" +
+                                    "\"false\"" +
+                                    "]");
                             out.flush();
                         }
 

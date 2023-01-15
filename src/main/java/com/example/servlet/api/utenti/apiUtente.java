@@ -137,12 +137,31 @@ public class apiUtente extends HttpServlet {
                 if (dao == null) {
                     out.println("dao is null");
                 } else {
-
+                    int i = 0;
                     ArrayList<Utente> docenti = dao.getAllProfessori();
                     Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                    String json = gson.toJson(docenti);
-                    JsonElement je = JsonParser.parseString(json);
-                    out.println( gson.toJson(je) );
+
+                    out.println( "[");
+                    for (Utente u : docenti){
+                        out.println( "{");
+                        out.println("\"ID\"" + ":" + "\""+u.getID()+ "\"" + ",");
+                        out.println("\"email\"" + ":" + "\""+u.getEmail()+ "\"" + ",");
+                        out.println("\"password\"" + ":" + "\""+u.getPassword()+ "\"" + ",");
+                        out.println("\"nome\"" + ":" + "\""+u.getNome()+ "\"" + ",");
+                        out.println("\"cognome\"" + ":" + "\""+u.getCognome()+ "\"" + ",");
+                        out.println("\"pf\"" + ":" + "\""+u.getPf()+ "\"" + ",");
+                        out.println("\"stelle\"" + ":" + "\""+u.getStelle()+ "\"" + ",");
+
+                        out.println( "\"corsi\"" + ":"+gson.toJson(JsonParser.parseString(gson.toJson(dao.getCorsiByDoc(u.getEmail())))) );
+                        out.println("     }");
+                        if(i<docenti.size()-1){
+                            i++;
+                            out.print(",");
+                        }
+                    }
+                    out.println( "]");
+
+
                     out.flush();
 
 
@@ -155,11 +174,32 @@ public class apiUtente extends HttpServlet {
                 } else {
                     String corso = request.getParameter("corso");
                     ArrayList<Utente> docenti = dao.getDocByCorso(corso);
+                    int i = 0;
                     Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                    String json = gson.toJson(docenti);
-                    JsonElement je = JsonParser.parseString(json);
-                    out.println( gson.toJson(je) );
+
+                    out.println( "[");
+                    for (Utente u : docenti){
+                        out.println( "{");
+                        out.println("\"ID\"" + ":" + "\""+u.getID()+ "\"" + ",");
+                        out.println("\"email\"" + ":" + "\""+u.getEmail()+ "\"" + ",");
+                        out.println("\"password\"" + ":" + "\""+u.getPassword()+ "\"" + ",");
+                        out.println("\"nome\"" + ":" + "\""+u.getNome()+ "\"" + ",");
+                        out.println("\"cognome\"" + ":" + "\""+u.getCognome()+ "\"" + ",");
+                        out.println("\"pf\"" + ":" + "\""+u.getPf()+ "\"" + ",");
+                        out.println("\"stelle\"" + ":" + "\""+u.getStelle()+ "\"" + ",");
+
+                        out.println( "\"corsi\"" + ":"+gson.toJson(JsonParser.parseString(gson.toJson(dao.getCorsiByDoc(u.getEmail())))) );
+                        out.println("     }");
+                        if(i<docenti.size()-1){
+                            i++;
+                            out.print(",");
+                        }
+                    }
+                    out.println( "]");
+
+
                     out.flush();
+
 
 
                 }
@@ -196,6 +236,25 @@ public class apiUtente extends HttpServlet {
                 }
                 break;
 
+            }
+            case "getMiniUser" : {
+                if (dao == null) {
+                    out.println("dao is null");
+                } else {
+                    String userName = request.getParameter("mail");
+                    Utente u = dao.getMiniUtente(userName);
+                    out.println("{");
+                    out.println("       \"nome\": " +"\"" + u.getNome() + "\"" +" ,");
+                    out.println("       \"cognome\": " +"\"" + u.getCognome() +"\"" + " ,");
+                    out.println("       \"ruolo\" : " +"\"" + u.getRuolo() +"\"" + " ,");
+                    out.println("       \"pf\" : " +"\"" + u.getPf() +"\"" );
+                    out.println("}");
+
+
+
+
+                }
+                break;
             }
 
 

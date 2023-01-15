@@ -52,10 +52,14 @@ public class apiCorso extends HttpServlet {
                     } else {
 
 
+
+                        out.println("{");
+                        out.println("       \"corsi\": ");
                         Gson gson = new GsonBuilder().setPrettyPrinting().create();
                         String json = gson.toJson(dao.getCorsiByDoc("all"));
                         JsonElement je = JsonParser.parseString(json);
                         out.println( gson.toJson(je) );
+                        out.println("}");
                         out.flush();
 
 
@@ -67,12 +71,14 @@ public class apiCorso extends HttpServlet {
                     if (dao == null) {
                         out.println("dao is null");
                     } else {
-
+                        out.println("{");
+                        out.println("       \"corsi\": ");
                         String mail = request.getParameter("mail");
                         Gson gson = new GsonBuilder().setPrettyPrinting().create();
                         String json = gson.toJson(dao.getCorsiByDoc(mail));
                         JsonElement je = JsonParser.parseString(json);
                         out.println( gson.toJson(je) );
+                        out.println("}");
                         out.flush();
 
 

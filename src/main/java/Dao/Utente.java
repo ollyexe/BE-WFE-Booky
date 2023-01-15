@@ -14,6 +14,7 @@ public class Utente {
 
 
 
+
     //object to insert
     public Utente(int ID,String email, String password,String nome,String cognome, String ruolo){
         this.ID=ID;
@@ -42,6 +43,18 @@ public class Utente {
         else if(attivo=="true") {
             this.attivo=true;
         }
+
+    }
+    public Utente(String nome,String cognome, String ruolo,String PF){
+        this.ID=-1;
+        this.email=null;
+        this.password=null;
+        this.nome=nome;
+        this.cognome  = cognome;
+        this.ruolo = ruolo;
+        this.pf=PF;
+        this.stelle=-1;
+        this.attivo=true;
 
     }
 
