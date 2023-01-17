@@ -284,7 +284,51 @@ public class apiLezione extends HttpServlet {
                     else {
 
                         String userName = request.getParameter("mail");
-                        ArrayList<Lezione> lex = dao.getLezioneByUtente(userName);
+                        ArrayList<Lezione> lex = dao.getNextLezioniPrenotate(userName);
+                        int j = 0;
+
+                        out.println("[");
+                        for (int i = 0; i < lex.size() ; i++) {
+                            Lezione l = lex.get(i);
+                            Corso c = dao.getCorsoByID(l.getCorso_ID());
+                            Utente doc = dao.getUtenteByID(l.getDocente_ID());
+                            out.println("     {");
+                            out.println("       \"data\" : " + "\"" +l.getData() + "\"" + " ,");
+                            out.println("       \"ora\" : " +  "\"" + l.getOra() + "\"" + " ,");
+                            out.println("       \"nome_corso\": " +"\"" + c.getNome() + "\"" +" ,");
+                            out.println("       \"nome_docente\": " +"\"" + doc.getNome() +"\"" + " ,");
+                            out.println("       \"cognome_docente\" : " +"\"" + doc.getCognome() +"\"" + " ,");
+                            out.println("       \"email\" : " +"\"" + doc.getEmail() +"\"" + " ,");
+                            out.println("       \"valutazione\" : " +"\"" + l.getValutazione() +"\"" + " ,");
+
+                            out.println("       \"pf\" : " +"\"" + doc.getPf() +"\"" + " ,");
+                            out.println("       \"stelle\" : " +"\"" + doc.getStelle() +"\"" + " ,");
+                            out.println("       \"prezzo\" : " +"\"" + l.getPrezzo() +"\"" );
+                            out.println("     }");
+                            if(j<lex.size()-1){
+                                j++;
+                                out.print(",");
+                            }
+
+                        }
+
+
+                        out.println("]");
+
+                        out.flush();
+
+                    }
+                    break;
+                }
+
+                case "getLezioniDaConfermare" : {
+                    if (this.dao == null) {
+                        out.println("dao is null");
+                    }
+                    else {
+
+                        String userName = request.getParameter("mail");
+                        ArrayList<Lezione> lex = dao.getLezioniDaConfermare(userName);
                         int j = 0;
 
                         out.println("[");

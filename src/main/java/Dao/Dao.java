@@ -970,14 +970,14 @@ public class Dao {
     }
 
 
-    public ArrayList<Lezione> getLezioneByUtente(String mail){
+    public ArrayList<Lezione> getNextLezioniPrenotate(String mail){
         Connection con = null;
         ArrayList<Lezione> dump = new ArrayList<>();
         try {
             con = Dao.getConnection();
             int ID = getIDbyUtente(mail);
 
-            PreparedStatement prs = con.prepareStatement("Select * From lezione Where Utente_ID = ? AND Stato='Prenotata' ORDER BY Data ASC ;");
+            PreparedStatement prs = con.prepareStatement("Select * From lezione Where Utente_ID = ? AND Stato='Prenotata' AND ((Data > CURRENT_DATE)OR ((Data = CURRENT_DATE)AND ((CAST(Ora AS TIME ))>CURRENT_TIME) )) ORDER BY Data ASC ;");
             prs.setInt(1,ID);
 
 
@@ -995,6 +995,38 @@ public class Dao {
             System.out.println(e.getMessage());
         } finally {
            closeCon(con);
+
+        }
+
+
+        return dump;
+    }
+
+    public ArrayList<Lezione> getLezioniDaConfermare(String mail){
+        Connection con = null;
+        ArrayList<Lezione> dump = new ArrayList<>();
+        try {
+            con = Dao.getConnection();
+            int ID = getIDbyUtente(mail);
+
+            PreparedStatement prs = con.prepareStatement("Select * From lezione Where Utente_ID = ? AND Stato='Prenotata' AND ((Data < CURRENT_DATE)OR ((Data = CURRENT_DATE)AND ((CAST(Ora AS TIME ))<CURRENT_TIME) )) ORDER BY Data ASC ;");
+            prs.setInt(1,ID);
+
+
+            ResultSet rs = prs.executeQuery();
+
+            while (rs.next()) {
+                Lezione u = new Lezione(rs.getString("Data"), rs.getString("Ora"),rs.getString("Stato"),rs.getInt("Corso_ID"),rs.getInt("Docente_ID"),rs.getInt("Utente_ID"),rs.getInt("Valutazione"), rs.getDouble("prezzo"));
+                dump.add(u);
+            }
+
+            System.out.println("Successful Dump getLezioneByUtente");
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            closeCon(con);
 
         }
 
