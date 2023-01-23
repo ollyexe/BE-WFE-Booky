@@ -14,7 +14,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
-@WebServlet(name = "login", value = "/apiUtente")
+@WebServlet(name = "apiUtente", value = "/apiUtente")
 public class apiUtente extends HttpServlet {
     static Dao dao;
 
@@ -224,6 +224,47 @@ public class apiUtente extends HttpServlet {
                     catch (Error error){
                         out.print("{" +
                                 "\"delete_state\"" + ":" + "\"already\"" +" ,"+
+                                "\"state_description\"" + ":" + "\"user with this email is already deleted or doesnt exist\"" +
+                                "}");
+                        out.flush();
+                    }
+
+
+
+
+
+                }
+                break;
+
+            }
+            case "changePassword" : {
+                if (dao == null) {
+                    out.println("dao is null");
+                } else {
+                    boolean flag= false;
+                    String email = request.getParameter("mail");
+                    String password = request.getParameter("pass");
+                    try {
+                        flag = dao.changePass(email,password);
+                        if(flag){
+                            out.print("{" +
+                                    "\"change_state\"" + ":" + "\"true\"" +" ,"+
+                                    "\"state_description\"" + ":" + "\"user with this email was deleted\"" +
+                                    "}");
+                            out.flush();
+                        }
+                        else {
+                            out.print("{" +
+                                    "\"change_state\"" + ":" + "\"fail\"" +" ,"+
+                                    "\"state_description\"" + ":" + "\"user with this email is already deleted or doesnt exist\"" +
+                                    "}");
+                            out.flush();
+                        }
+
+                    }
+                    catch (Error error){
+                        out.print("{" +
+                                "\"change_state\"" + ":" + "\"fail\"" +" ,"+
                                 "\"state_description\"" + ":" + "\"user with this email is already deleted or doesnt exist\"" +
                                 "}");
                         out.flush();

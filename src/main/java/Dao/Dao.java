@@ -532,9 +532,37 @@ public class Dao {
         return -1;
     }
 
+    public boolean changePass(String email,String new_pass){
+        Connection con = null;
+        double stelle = -1;
+        try {
+            con = Dao.getConnection();
+
+
+            assert con != null;
+            PreparedStatement prs = con.prepareStatement("UPDATE utente SET Password = ? WHERE utente.Email = ?;");
+                prs.setString(1,encryptMD5(new_pass));
+                prs.setString(2,email);
 
 
 
+                prs.executeUpdate();
+
+
+
+
+
+            return getUtente(email).getPassword().equals(encryptMD5(new_pass));
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            closeCon(con);
+
+        }
+        return false;
+    }
 
     //Utente--------------------------------------------------------------------
 
@@ -1345,7 +1373,7 @@ public class Dao {
             int ID_corso = c.getID();
 
 
-            PreparedStatement prs = con.prepareStatement("Select * From lezione Where Corso_ID = ? AND Stato = 'Libera' ;");
+            PreparedStatement prs = con.prepareStatement("Select * From lezione Where Corso_ID = ? AND Stato = 'Libera' AND ((Data > CURRENT_DATE)OR ((Data = CURRENT_DATE)AND ((CAST(Ora AS TIME ))>CURRENT_TIME) )) ;");
             prs.setInt(1,ID_corso);
 
 
@@ -1416,7 +1444,7 @@ public class Dao {
 
 
 
-            PreparedStatement prs = con.prepareStatement("Select * From lezione Where Docente_ID = ? AND Corso_ID=? AND Stato = 'Libera' ;");
+            PreparedStatement prs = con.prepareStatement("Select * From lezione Where Docente_ID = ? AND Corso_ID=? AND Stato = 'Libera' AND ((Data > CURRENT_DATE)OR ((Data = CURRENT_DATE)AND ((CAST(Ora AS TIME ))>CURRENT_TIME) ));");
             prs.setInt(1,doc.getID());
             prs.setInt(2,cor.getID());
 

@@ -41,5 +41,8 @@
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.44" level="project" />
     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.15" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.10" level="project" />
+    <orderEntry type="library" name="jquery" level="application" />
+    <orderEntry type="library" name="vue" level="application" />
+    <orderEntry type="library" name="bootstrap" level="application" />
   </component>
 </module>
