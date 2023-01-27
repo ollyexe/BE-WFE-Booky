@@ -1,22 +1,37 @@
-app = Vue.createApp({
+Vue.component('centro', {
+    props: ['title'],
+    template: '<article><h1>{{ title }}</h1><p>Testo.</p></article>'
+})
 
+const app = Vue.createApp({
+    //data, function ,template
     data(){
         return {
-            firstName : 'Olly',
-            surname : 'GG',
-            email : 'olly@gmail.com',
-            pf : 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg',
-            primaPagina: true,
-            secondaPagina: false
+            show_book:true,
+            act_book_title:'Game of thrones',
+            flag: true,
+            x:0,
+            y:0
         }
     },
+
     methods:{
-        getUser :  function (){
-            alert(this.firstName)
+        togle(){
+            this.show_book=!this.show_book
         },
-        transit : function() {
-            this.secondaPagina = true;
-            this.primaPagina = false;
+        handleevent(click_type,numeber){
+            console.log(click_type.type,numeber)
+        },
+        handleMouseMovement(e){
+            this.x=e.offsetX
+            this.y=e.offsetY
         }
+
+
     }
-}).mount('#app')
+
+
+
+})
+
+app.mount('#app')

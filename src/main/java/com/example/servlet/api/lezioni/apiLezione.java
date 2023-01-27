@@ -18,7 +18,7 @@ public class apiLezione extends HttpServlet {
     public void init(ServletConfig config) {
 
         dao  = (Dao) config.getServletContext().getAttribute("Dao");
-        System.out.println(dao==null);
+       
 
     }
 
@@ -36,7 +36,7 @@ public class apiLezione extends HttpServlet {
 
         HttpSession s = request.getSession();
         PrintWriter out = response.getWriter();
-        System.out.println(request.getParameter("path"));
+        //System.out.println(request.getParameter("path"));
         response.setContentType("application/json");
 
 

@@ -23,7 +23,7 @@ public class apiUtente extends HttpServlet {
 
 
         dao  = (Dao) config.getServletContext().getAttribute("Dao");
-        System.out.println(dao==null);
+
 
 
     }
@@ -42,7 +42,7 @@ public class apiUtente extends HttpServlet {
             throws ServletException, IOException {
 
         PrintWriter out = response.getWriter();
-        System.out.println(request.getParameter("path"));
+        //System.out.println(request.getParameter("path"));
         response.setContentType("application/json");
 
 
@@ -91,6 +91,18 @@ public class apiUtente extends HttpServlet {
 
                     }
                     break;
+                }
+            }
+
+            case "logout" : {
+                if (dao == null) {
+                    out.println("dao is null");
+                }else {
+
+                    HttpSession s = request.getSession(false);
+                    s.invalidate();
+                    break;
+
                 }
             }
             case "registration" : {
