@@ -126,7 +126,7 @@
                    </div>
                 </section>
             </div>
-            <div v-if="subjects_page" id="prof_page">
+            <div v-if="subjects_page" id="subj_page">
                 <section class="flex-grow justify-content-lg-between justify-content-lg-evenly flex-wrap" style="display: list-item !important;">
                     <div v-for="materia in materie['corsi']"> <div class="card-prof" style="float: left">
                         <div class="image-content-prof">
@@ -213,7 +213,7 @@
 
         <div v-if="role===-1" id="login_page" class="box__p">
             <div class="container__p">
-                <form action="signUp.html">
+                <form action="signup/signUp.html">
                     <!-- Email input -->
                     <div class="form-outline mb-4">
                         <input v-model="email"  type="email" placeholder="Email"  autocomplete="on" class="form-control" />
