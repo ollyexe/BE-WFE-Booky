@@ -3,6 +3,8 @@ package com.example.servlet.api.lezioni;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
@@ -139,6 +141,7 @@ public class apiLezione extends HttpServlet {
                         out.println("dao is null");
                     }
                     else {
+
                         ArrayList<Lezione> lex = dao.getLezioniLibere();
                         int j = 0;
 
@@ -174,50 +177,35 @@ public class apiLezione extends HttpServlet {
                     }
                     break;
                 }
-
-                case "getLezioniLibereByCorso" :{
+                case "getLezioniLibereByDocente" : {
                     if (this.dao == null) {
-
                         out.println("dao is null");
                     }
                     else {
+                        int docente = Integer.parseInt(request.getParameter("ID"));
+                        List<Lezione> lex = dao.getLezioniLibere();
+                        lex=lex.stream().filter(lezione -> lezione.getDocente_ID()==docente).collect(Collectors.toList());
+                        int j = 0;
 
-                        String corso = request.getParameter("corso");
-
-                        ArrayList<Lezione> lex = dao.getLezioniLibereByCorso(corso);
-
-                        out.println("{");
-                        out.println("\"Nome Oggetto\"" + ":" + "\""+"Corsi per Materia "+ "\"" + ",");
-
-
-                        out.println("\"Corso\"" + ":" + "\""+corso+ "\"" + ",");
-                        out.println("\"numero_lezioni\"" + ":"+ "\"" + lex.size()+ "\"" + ",");
-                        out.println("\"lezioni\" : ");
                         out.println("[");
                         for (int i = 0; i < lex.size() ; i++) {
                             Lezione l = lex.get(i);
                             Corso c = dao.getCorsoByID(l.getCorso_ID());
                             Utente doc = dao.getUtenteByID(l.getDocente_ID());
-                            //Utente stud = dao.getUtenteByID(l.getUtente_ID());
-
-
-
                             out.println("     {");
                             out.println("       \"data\" : " + "\"" +l.getData() + "\"" + " ,");
                             out.println("       \"ora\" : " +  "\"" + l.getOra() + "\"" + " ,");
-                            out.println("       \"stato\" : " +"\"" + l.getStato() +"\"" + " ,");
                             out.println("       \"nome_corso\": " +"\"" + c.getNome() + "\"" +" ,");
                             out.println("       \"nome_docente\": " +"\"" + doc.getNome() +"\"" + " ,");
+                            out.println("       \"cognome_docente\" : " +"\"" + doc.getCognome() +"\"" + " ,");
                             out.println("       \"email\" : " +"\"" + doc.getEmail() +"\"" + " ,");
                             out.println("       \"valutazione\" : " +"\"" + l.getValutazione() +"\"" + " ,");
-
-                            out.println("       \"cognome_docente\" : " +"\"" + doc.getCognome() +"\"" + " ,");
-                            out.println("       \"prezzo\" : " +"\"" + l.getPrezzo() +"\"" + " ,");
-                            //out.println("       \"nome_studente\" : " +"\"" + stud.getNome() +"\"" + " ,");
-                            //out.println("       \"cognome_studente\" : " +"\"" + stud.getCognome() +"\""+ " ," );
-                            //out.println("       \"valutazione\" : " +"\"" + l.getValutazione() +"\"" + " ,");
+                            out.println("       \"pf\" : " +"\"" + doc.getPf() +"\"" + " ,");
+                            out.println("       \"stelle\" : " +"\"" + doc.getStelle() +"\"" + " ,");
+                            out.println("       \"prezzo\" : " +"\"" + l.getPrezzo() +"\"" );
                             out.println("     }");
-                            if(i<lex.size()-1){
+                            if(j<lex.size()-1){
+                                j++;
                                 out.print(",");
                             }
 
@@ -225,11 +213,59 @@ public class apiLezione extends HttpServlet {
 
 
                         out.println("]");
-                        out.println("}");
 
+                        out.flush();
 
                     }
+                    break;
                 }
+
+                case "getLezioniLibereByCorso" : {
+                    if (this.dao == null) {
+                        out.println("dao is null");
+                    }
+                    else {
+                        String  corso =request.getParameter("corso");
+                        List<Lezione> lex = dao.getLezioniLibere();
+                        lex=lex.stream().filter(lezione -> lezione.getCorso_ID()==Dao.getCorsoByNome(corso).getID()).collect(Collectors.toList());
+                        int j = 0;
+
+                        out.println("[");
+                        for (int i = 0; i < lex.size() ; i++) {
+                            Lezione l = lex.get(i);
+                            Corso c = dao.getCorsoByID(l.getCorso_ID());
+                            Utente doc = dao.getUtenteByID(l.getDocente_ID());
+                            out.println("     {");
+                            out.println("       \"data\" : " + "\"" +l.getData() + "\"" + " ,");
+                            out.println("       \"ora\" : " +  "\"" + l.getOra() + "\"" + " ,");
+                            out.println("       \"nome_corso\": " +"\"" + c.getNome() + "\"" +" ,");
+                            out.println("       \"nome_docente\": " +"\"" + doc.getNome() +"\"" + " ,");
+                            out.println("       \"ID_docente\": " +"\"" + doc.getID() +"\"" + " ,");
+                            out.println("       \"cognome_docente\" : " +"\"" + doc.getCognome() +"\"" + " ,");
+                            out.println("       \"email\" : " +"\"" + doc.getEmail() +"\"" + " ,");
+                            out.println("       \"valutazione\" : " +"\"" + l.getValutazione() +"\"" + " ,");
+                            out.println("       \"pf\" : " +"\"" + doc.getPf() +"\"" + " ,");
+                            out.println("       \"stelle\" : " +"\"" + doc.getStelle() +"\"" + " ,");
+                            out.println("       \"prezzo\" : " +"\"" + l.getPrezzo() +"\"" );
+                            out.println("     }");
+                            if(j<lex.size()-1){
+                                j++;
+                                out.print(",");
+                            }
+
+                        }
+
+
+                        out.println("]");
+
+                        out.flush();
+
+                    }
+                    break;
+                }
+
+
+
 
 
 

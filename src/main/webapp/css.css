@@ -370,10 +370,84 @@ body {
 }
 
 
+
+
+
+
+
+
+
+
+
+
 @media only screen and (min-width: 1400px) {
     .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
         max-width: 100%;
     }
 }
+
+
+.team .member {
+    position: relative;
+    box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    border-radius: 5px;
+    background: #fff;
+}
+
+.team .member .teampic {
+    overflow: hidden;
+    width: 180px;
+    border-radius: 50%;
+}
+
+.team .member .member-info {
+    padding-left: 30px;
+}
+
+.team .member h4 {
+    font-weight: 700;
+    margin-bottom: 5px;
+    font-size: 20px;
+    color: tomato;
+}
+
+.team .member span {
+    display: block;
+    font-size: 15px;
+    padding-bottom: 10px;
+    position: relative;
+    font-weight: 500;
+}
+
+.team .member span::after {
+    content: "";
+    position: absolute;
+    display: block;
+    width: 70px;  /*Linea tra lezione e data*/
+    height: 2px;
+    background: black;
+    bottom: 0;
+    left: 0;
+}
+
+.team .member p {
+    margin: 10px 0 0 0;
+    font-size: 14px;
+}
+
+.team .member .social a i {
+    color: tomato;
+    font-size: 16px;
+    margin: 0 2px;
+}
+
+.select option:focus{
+    cursor: pointer;
+}
+
+
+
+
 
 

@@ -1480,7 +1480,7 @@ public class Dao {
 
 
 
-            PreparedStatement prs = con.prepareStatement("Select * From lezione Where Stato = 'Libera' ;");
+            PreparedStatement prs = con.prepareStatement("Select * From lezione Where Stato = 'Libera' AND ((Data > CURRENT_DATE)OR ((Data = CURRENT_DATE)AND ((CAST(Ora AS TIME ))>CURRENT_TIME) )) ;");
 
 
 
