@@ -1,5 +1,5 @@
 
-package com.example.servlet.api.utenti;
+package it.unito.booky.api.utenti;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -11,7 +11,6 @@ import javax.servlet.annotation.*;
 import Dao.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 @WebServlet(name = "apiUtente", value = "/apiUtente")

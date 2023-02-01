@@ -1,8 +1,6 @@
-package com.example.servlet;
+package it.unito.booky;
 
-import java.io.*;
 import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import Dao.*;

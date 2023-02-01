@@ -1,4 +1,4 @@
-package com.example.servlet.api.lezioni;
+package it.unito.booky.api.lezioni;
 
 
 import java.io.*;
@@ -309,11 +309,6 @@ public class apiLezione extends HttpServlet {
                     break;
                 }
 
-
-
-
-
-
                 case "getLezioniLibereByCorso" : {
                     if (this.dao == null) {
                         out.println("dao is null");
@@ -410,11 +405,12 @@ public class apiLezione extends HttpServlet {
                         String data = request.getParameter("data");
                         String ora = request.getParameter("ora");
                         int Docente_ID = Dao.getIDbyUtente(request.getParameter("docente"));
+                        int Corso_ID = Dao.getCorsoByNome(request.getParameter("corso")).getID();
                         int stelle = Integer.parseInt(request.getParameter("stelle"));
 
 
                         try {
-                            flag = dao.valutaLezione(data,ora,Docente_ID,stelle);
+                            flag = dao.valutaLezione(data,ora,Docente_ID,Corso_ID,stelle);
                             if(flag){
                                 out.print("{" +
                                         "\"rate_state\"" + ":" + "\"succes\"" +" ,"+
@@ -449,12 +445,13 @@ public class apiLezione extends HttpServlet {
                         String ora = request.getParameter("ora");
                         String docente =  request.getParameter("docente");
                         String utente =  request.getParameter("utente");
+                        int Corso_ID = Dao.getCorsoByNome(request.getParameter("corso")).getID();
                         int Docente_ID = Dao.getIDbyUtente(request.getParameter("docente"));
                         int Utente_ID = Dao.getIDbyUtente(request.getParameter("utente"));
 
 
                         try {
-                            flag = dao.prenotaLezione(data,ora,Docente_ID,Utente_ID);
+                            flag = dao.prenotaLezione(data,ora,Docente_ID,Utente_ID,Corso_ID);
                             if(flag){
                                 out.print("{" +
                                         "\"book_state\"" + ":" + "\"true\"" +" ,"+
@@ -479,6 +476,7 @@ public class apiLezione extends HttpServlet {
                     break;
 
                 }
+
                 case "annullaLezione" : {
                     if (dao == null) {
                         out.println("dao is null");
@@ -488,12 +486,14 @@ public class apiLezione extends HttpServlet {
                         String ora = request.getParameter("ora");
                         String docente =  request.getParameter("docente");
 
+
                         int Docente_ID = Dao.getIDbyUtente(request.getParameter("docente"));
+                        int Corso_ID = Dao.getCorsoByNome(request.getParameter("corso")).getID();
 
 
 
                         try {
-                            flag = dao.annullaLezione(data,ora,Docente_ID);
+                            flag = dao.annullaLezione(data,ora,Docente_ID,Corso_ID);
                             if(flag){
                                 out.print("[" +
                                          "\"true\"" +
@@ -516,6 +516,7 @@ public class apiLezione extends HttpServlet {
                     break;
 
                 }
+
                 case "concludiLezione" : {
                     if (dao == null) {
                         out.println("dao is null");
@@ -526,11 +527,12 @@ public class apiLezione extends HttpServlet {
                         String docente =  request.getParameter("docente");
 
                         int Docente_ID = Dao.getIDbyUtente(request.getParameter("docente"));
+                        int Corso_ID = Dao.getCorsoByNome(request.getParameter("corso")).getID();
 
 
 
                         try {
-                            flag = dao.concludiLezione(data,ora,Docente_ID);
+                            flag = dao.concludiLezione(data,ora,Docente_ID,Corso_ID);
                             if(flag){
                                 out.print("{" +
                                         "\"cancell_state\"" + ":" + "\"true\"" +" ,"+
@@ -555,10 +557,6 @@ public class apiLezione extends HttpServlet {
                     break;
 
                 }
-
-
-
-
 
             }
         }

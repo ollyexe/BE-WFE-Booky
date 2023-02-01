@@ -7,15 +7,20 @@ public class KeyLezione {
     String ora;
     String data;
     int Docente;
+    int Corso;
 
-    public KeyLezione(String ora, String data, int docente){
+    public KeyLezione(String ora, String data, int docente,int corso){
         this.Docente=docente;
         this.data=data;
         this.ora=ora;
+        this.Corso=corso;
     }
 
     public int getDocente() {
         return Docente;
+    }
+    public int getCorso() {
+        return Corso;
     }
 
     public String getData() {
@@ -32,6 +37,7 @@ public class KeyLezione {
                 "ora='" + ora + '\'' +
                 ", data='" + data + '\'' +
                 ", Docente=" + Docente +
+                ", Corso=" + Corso +
                 '}';
     }
 
@@ -40,11 +46,11 @@ public class KeyLezione {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         KeyLezione that = (KeyLezione) o;
-        return Docente == that.Docente && Objects.equals(ora, that.ora) && Objects.equals(data, that.data);
+        return Docente == that.Docente && Objects.equals(ora, that.ora) && Objects.equals(data, that.data) && Corso==that.Corso;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ora, data, Docente);
+        return Objects.hash(ora, data, Docente,Corso);
     }
 }

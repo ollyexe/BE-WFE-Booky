@@ -1,10 +1,8 @@
-package com.example.servlet.api.corso;
+package it.unito.booky.api.corso;
 
 
 import java.io.*;
-import java.util.ArrayList;
 import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
