@@ -943,12 +943,12 @@ public class Dao {
 
 
             assert con != null;
-            PreparedStatement prs = con.prepareStatement("UPDATE lezione SET Utente_ID =? , Stato = 'Prenotata' WHERE Data = ? AND Ora = ? AND Docente_ID = ? AND Corso_ID=?;");
-            prs.setInt(1,Utente_ID);
-            prs.setString(2,data);
-            prs.setString(3,ora);
-            prs.setInt(4,Docente_ID);
-            prs.setInt(5,Corso_ID);
+            PreparedStatement prs = con.prepareStatement("CALL prenotaLezione(?,?,?,?,?);");
+            prs.setInt(5,Utente_ID);
+            prs.setString(3,data);
+            prs.setString(4,ora);
+            prs.setInt(1,Docente_ID);
+            prs.setInt(2,Corso_ID);
 
 
             prs.executeUpdate();
@@ -1016,22 +1016,39 @@ public class Dao {
         return l;
     }
 
+    private boolean lezioneIsAnnullata(String data, String ora, int Docente_ID,int Corso_ID){
+        Connection con = null;
+        try {
+            con = Dao.getConnection();
+            Lezione l = getLezione(data,ora,Docente_ID,Corso_ID);
+            if (l.getUtente_ID()==0){
+                return true;
+            }
+
+        } finally {
+            assert con != null;
+            closeCon(con);
+        }
+
+
+
+        return false;
+    }
     public boolean annullaLezione(String data, String ora, int Docente_ID,int Corso_ID){
         Connection con = null;
 
         try {
             con = Dao.getConnection();
-            if(!lezioneExists(data, ora, Docente_ID,Corso_ID) || isConclusa(data, ora, Docente_ID,Corso_ID) ){
+            if(!lezioneExists(data, ora, Docente_ID,Corso_ID) || isConclusa(data, ora, Docente_ID,Corso_ID) || lezioneIsAnnullata(data, ora, Docente_ID,Corso_ID) ){
                 throw new Error("Lezione.annullaLezione.error() : Lezione you tring to cancell doent exists ");
             }
 
 
             assert con != null;
-            PreparedStatement prs = con.prepareStatement("UPDATE `lezione` SET `Utente_ID` = '0' , `Stato` = 'Libera' WHERE `lezione`.`Data` = ? AND `lezione`.`Ora` = ? AND `lezione`.`Docente_ID` = ? AND lezione.Corso_ID=?;");
-            prs.setString(1,data);
-            prs.setString(2,ora);
-            prs.setInt(3,Docente_ID);
-            prs.setInt(3,Corso_ID);
+            PreparedStatement prs = con.prepareStatement("call annullaLezione(?,?,?);");
+            prs.setString(2,data);
+            prs.setString(3,ora);
+            prs.setInt(1,Docente_ID);
 
 
             prs.executeUpdate();
@@ -1048,7 +1065,7 @@ public class Dao {
             closeCon(con);
         }
 
-        System.out.println(isPrenotata(data, ora, Docente_ID,Corso_ID));
+        System.out.println(!isPrenotata(data, ora, Docente_ID,Corso_ID));
         return (!isPrenotata(data, ora, Docente_ID,Corso_ID));
     }
 

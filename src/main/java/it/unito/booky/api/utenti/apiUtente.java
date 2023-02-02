@@ -12,6 +12,7 @@ import Dao.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
+import org.apache.commons.lang3.EnumUtils;
 
 @WebServlet(name = "apiUtente", value = "/apiUtente")
 public class apiUtente extends HttpServlet {
@@ -74,7 +75,9 @@ public class apiUtente extends HttpServlet {
 
                                 "}");
                         out.flush();
-
+                         HttpSession s = request.getSession();
+                         s.setAttribute("login_state",true);
+                         s.setAttribute("email",u.getEmail());
 
                     }
                      else {
@@ -98,7 +101,7 @@ public class apiUtente extends HttpServlet {
                     out.println("dao is null");
                 }else {
 
-                    HttpSession s = request.getSession(false);
+                    HttpSession s = request.getSession();
                     s.invalidate();
                     break;
 
@@ -178,6 +181,31 @@ public class apiUtente extends HttpServlet {
 
                 }
                 break;
+            }
+            case "sessionLogin" : {
+
+                HttpSession s = request.getSession();
+
+                if (s.getAttribute("login_state")==null){
+                    out.print("{" +
+                            "\"login_state\"" + ":" + "\"false\"" +" ,"+
+                            "\"email\"" + ":" + "\"\"" +
+
+                            "}");
+                    out.flush();
+                }
+                else {
+                    out.print("{" +
+                            "\"login_state\"" + ":" + "\"true\"" +" ,"+
+                            "\"email\"" + ":" + "\""+s.getAttribute("email")+"\"" +
+
+                            "}");
+                    out.flush();
+                }
+
+                break;
+
+
             }
             case "getDocByCorso" : {
                 if (dao == null) {

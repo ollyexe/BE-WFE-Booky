@@ -443,8 +443,6 @@ public class apiLezione extends HttpServlet {
                         boolean flag= false;
                         String data = request.getParameter("data");
                         String ora = request.getParameter("ora");
-                        String docente =  request.getParameter("docente");
-                        String utente =  request.getParameter("utente");
                         int Corso_ID = Dao.getCorsoByNome(request.getParameter("corso")).getID();
                         int Docente_ID = Dao.getIDbyUtente(request.getParameter("docente"));
                         int Utente_ID = Dao.getIDbyUtente(request.getParameter("utente"));
@@ -484,9 +482,6 @@ public class apiLezione extends HttpServlet {
                         boolean flag= false;
                         String data = request.getParameter("data");
                         String ora = request.getParameter("ora");
-                        String docente =  request.getParameter("docente");
-
-
                         int Docente_ID = Dao.getIDbyUtente(request.getParameter("docente"));
                         int Corso_ID = Dao.getCorsoByNome(request.getParameter("corso")).getID();
 

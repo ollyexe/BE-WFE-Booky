@@ -45,13 +45,14 @@
                             <a href="#" class=" nav-link " data-toggle="dropdown"  aria-expanded="false">Tue lezione <i class="fa-solid fa-2xs fa-caret-square-down"></i></a>
                             <ul class="dropdown-menu bg-navBar" role="menu">
                                 <li class="nav-item">
-                                    <a v-if="role===1" @click="bookings_transition" class="nav-link  " href="#" >Prenotazioni</a>
+                                    <a v-if="role===1" @click="bookings_transition" class="nav-link  " href="#" >Prenotate</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a v-if="role===1" @click="for_confirmation" class="nav-link "  href="#" >Da confermare</a>
+                                    <a v-if="role===1" @click="for_confirmation_transition
+                                    " class="nav-link "  href="#" >Da confermare</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a v-if="role===1" @click="order_transition" class="nav-link "  href="#" >Lezioni Conclusi</a>
+                                    <a v-if="role===1" @click="order_transition" class="nav-link "  href="#" >Concluse</a>
                                 </li>
                             </ul>
                         </li>
@@ -212,7 +213,7 @@
                                                                 <!-- Button -->
                                                                 <div class="  text-end">
                                                                     <button type="button" class="btn btn-primary">
-                                                                        Aggiungi
+                                                                        Aggiungi <i class="fa-solid fa-cart-shopping"></i>
                                                                     </button>
                                                                 </div>
                                                                 <!-- Button -->
@@ -324,7 +325,7 @@
                                                                 <!-- Button -->
                                                                 <div class="  text-end">
                                                                     <button type="button" class="btn btn-primary">
-                                                                        Aggiungi
+                                                                        Aggiungi <i class="fa-solid fa-cart-shopping"></i>
                                                                     </button>
                                                                 </div>
                                                                 <!-- Button -->
@@ -384,9 +385,26 @@
                                                                 <!-- Price -->
                                                                 <!-- Button -->
                                                                 <div class="  text-end">
-                                                                    <button type="button" class="btn btn-primary">
-                                                                        Valuta<i class="fa-solid fa-star"></i>
-                                                                    </button>
+                                                                    <div class="btn-group" v-if="lex['valutazione']==='0'">
+                                                                        <button type="button" @click="valuta_lezione(lex['nome_corso'],lex['email'],lex['data'],lex['ora'],1)" class="btn btn-warning" style="color: white">
+                                                                            <i class="fa-solid fa-star"></i>
+                                                                        </button>
+                                                                        <button type="button" @click="valuta_lezione(lex['nome_corso'],lex['email'],lex['data'],lex['ora'],2)" class="btn btn-warning" style="color: white">
+                                                                            <i class="fa-solid fa-star" ></i>
+                                                                        </button>
+                                                                        <button type="button" @click="valuta_lezione(lex['nome_corso'],lex['email'],lex['data'],lex['ora'],3)" class="btn btn-warning" style="color: white">
+                                                                            <i class="fa-solid fa-star"></i>
+                                                                        </button>
+                                                                        <button type="button" @click="valuta_lezione(lex['nome_corso'],lex['email'],lex['data'],lex['ora'],4)" class="btn btn-warning" style="color: white">
+                                                                            <i class="fa-solid fa-star"></i>
+                                                                        </button>
+                                                                        <button type="button" @click="valuta_lezione(lex['nome_corso'],lex['email'],lex['data'],lex['ora'],5)" class="btn btn-warning" style="color: white">
+                                                                            <i class="fa-solid fa-star"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div v-else>
+                                                                        <h5>Valutata {{lex['valutazione']}} <i class="fa-solid fa-star"></i></h5>
+                                                                    </div>
                                                                 </div>
                                                                 <!-- Button -->
 
@@ -420,37 +438,9 @@
                             <div class="col-md-10">
                                 <div class="card mb-8">
                                     <div class="card-header py-3">
-                                        <h5 class="mb-0">Lezioni di {{selected_materia}}</h5>
+                                        <h5 class="mb-0">Lezioni prenotate</h5>
                                     </div>
                                     <br>
-                                    <div class="btn-group justify-content-evenly">
-                                        <div class="dropdown" >
-                                            <select class="form-select" data-style="btn-info" aria-label="Default select example" v-model="sel_data">
-                                                <option value=""  selected>Seleziona la data</option>
-                                                <option v-for="giorno in selector_data" :value="giorno" class="form-control">{{giorno}} {{get_day_week(giorno)}}</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="dropdown" >
-                                            <select class="form-select" aria-label="Default select example" v-model="sel_ora">
-                                                <option value=""  selected>Seleziona l'ora</option>
-                                                <option v-for="ora in selector_ora" :value="ora" class="form-control">{{ora}}-{{one_h_later(ora)}}</option>
-                                            </select>
-
-                                        </div>
-                                        <div class="dropdown" >
-
-                                            <select class="form-select" aria-label="Default select example" v-model="sel_prof">
-                                                <option value=""  selected>Seleziona il Professore</option>
-                                                <option  v-for="prof in selector_professore" :value="prof['ID']" class="form-control" >{{prof['nome']}}</option>
-                                            </select>
-                                        </div>
-
-                                        <div >
-                                            <button  v-if="!search_button_is_hiden" @click="filtra_lezioni_s"  class="btn btn-info">Cerca</button>
-                                            <button v-if="search_button_is_hiden" @click="cancella_filtri_s(selected_materia)" class="btn btn-close"></button>
-                                        </div>
-                                    </div>
                                     <div v-for="lex in lezioni_prenotate" class="card-body">
                                         <!-- Single item -->
                                         <div class="row">
@@ -472,8 +462,12 @@
                                                                 <!-- Price -->
                                                                 <!-- Button -->
                                                                 <div class="  text-end">
-                                                                    <button type="button" class="btn btn-danger">
-                                                                        Annulla <i class="fa-solid fa-delete-left"></i>
+                                                                    <button type="button"  @click="annulla_lezione(lex['nome_corso'],lex['email'],lex['data'],lex['ora']).then(this.get_lezioni_prenotate)" class="btn btn-danger">
+                                                                        Annulla <i class="fa-solid fa-x"></i>
+                                                                    </button>
+
+                                                                    <button type="button" @click="add_2_gcal(lex)" class="btn btn-success" style="margin-top: 20px">
+                                                                        <i class="fa-solid fa-add"></i>Calendario <i class="fa-solid fa-calendar"></i>
                                                                     </button>
                                                                 </div>
                                                                 <!-- Button -->
@@ -485,12 +479,7 @@
                                             </section><!-- End Team Section -->
                                         </div>
                                         <!-- Single item -->
-
-
                                         <hr class="my-4" />
-
-
-
                                     </div>
                                 </div>
 
@@ -533,8 +522,9 @@
                                                                 <!-- Price -->
                                                                 <!-- Button -->
                                                                 <div class="  text-end">
-                                                                    <button type="button" class="btn btn-danger">
-                                                                        Annulla <i class="fa-solid fa-delete-left"></i>
+                                                                    <button type="button" @click="concludi_lezione(lex['nome_corso'],lex['email'],lex['data'],lex['ora'])" class="btn btn-success
+">
+                                                                        Conferma <i class="fa-solid fa-check"></i>
                                                                     </button>
                                                                 </div>
                                                                 <!-- Button -->
@@ -709,10 +699,10 @@
                 </section>
 
             </div>
-
             <a v-if="role===1" @click="cart_transition" id="float_img" class="float" style="z-index: 1000">
-                <i class="fa fa-plus my-float"></i>
             </a>
+
+
         </div>
 
         <div v-if="role===-1" id="login_page" class="box__p">
@@ -784,10 +774,12 @@
                selected_professore :' ' ,
                selected_materia :' ' ,
                materie: '',
+
                lezioni: '',
                lezioni_finite:'',
                lezioni_da_confermare:'',
-               lezioni_prenotare:'',
+               lezioni_prenotate:'',
+
                selector_materie:'',
                selector_ora:'',
                selector_data:'',
@@ -802,16 +794,23 @@
 
 
         },
-        mounted(){
+        async mounted(){
             this.get_all_professori()
             this.get_all_materie()
-
+            await this.on_load_login()
 
 
         },
 
         methods: {
             reloadPage: function() {
+
+                $.get("apiUtente",{path: "logout"},
+                    function (data){
+
+
+                    }
+                )
                 window.location.reload();
             },
             home_transition: function () {
@@ -963,7 +962,7 @@
                 this.history_page=true
                 this.bookings_page=false
                 this.for_confirmation=false
-                this.get_lezioni_concluse()
+                this.get_lezioni_concluse
                 document.title='Ordini Conclusi'
             },
             bookings_transition: function () {
@@ -999,6 +998,36 @@
 
 
 
+            on_load_login:async function(){
+                var self=this
+
+                try{
+                    await $.get("apiUtente",{path: "sessionLogin"},
+                        function (data) {
+                            self.email=data['email']
+                            if (data['login_state']=="true"){
+                                $.get("apiUtente",{path: "getMiniUser", mail: data['email']},
+                                    function (data){
+                                        self.utente=data
+                                        if (self.utente['ruolo']==='admin'){
+                                            self.role=2
+                                            self.home_transition
+                                            document.title='Home'
+                                        }
+                                        else if (self.utente['ruolo']==='utente'){
+                                            self.role=1
+                                            self.home_transition
+                                            document.title='Home'
+                                        }
+
+                                    }
+                                )
+                            }
+                        })
+                }catch (e) {
+                    console.log(e)
+                }
+            },
 
             guest_login : function () {
                 this.role=0
@@ -1068,8 +1097,6 @@
                     }
                 )
 
-                console.log(self.lezioni)
-
 
 
             },
@@ -1095,10 +1122,8 @@
                         self.lezioni_finite=data
                     }
                 )
-
-                console.log(self.lezioni_finite)
             },
-            get_lezioni_da_confermare: async function () {
+            get_lezioni_da_confermare: async function (mail) {
                 var self=this
 
                 await $.get("apiLezione",{path: "getLezioniDaConfermare",mail:self.email},
@@ -1124,14 +1149,55 @@
                         self.selector_professore=data
                     }
                 )
+            },
+            concludi_lezione : async function(corso,docente,data,ora){
+                var self=this
+                let esito
+                 $.get("apiLezione",{path: "concludiLezione",corso:corso,docente:docente,data:data,ora:ora},
+                    function (data) {
+                        esito=data
 
-                console.log(selector_professore)
+                    }
+                ).then(this.get_lezioni_da_confermare)
+
+            },
+            valuta_lezione : async function(corso,docente,data,ora,stelle){
+                var self=this
+                let esito
+                $.get("apiLezione",{path: "valutaLezione",corso:corso,docente:docente,data:data,ora:ora,stelle:stelle},
+                    function (data) {
+                        esito=data
+
+                    }
+                ).then(this.get_lezioni_concluse)
+
+            },
+            annulla_lezione : async function(corso,docente,data,ora){
+                var self=this
+                let esito
+                $.get("apiLezione",{path: "annullaLezione",corso:corso,docente:docente,data:data,ora:ora},
+                    function (data) {
+                        esito=data
+
+                    }
+                ).then(this.get_lezioni_prenotate)
+
+            },
+            prenota_lezione : async function(corso,docente,data,ora,utente){
+                var self=this
+                let esito
+                $.get("apiLezione",{path: "prenotaLezione",corso:corso,docente:docente,data:data,ora:ora,utente:utente},
+                    function (data) {
+                        esito=data
+
+                    }
+                ).then(this.get_lezioni_prenotate)
+
             },
 
 
 
             filtra_lezioni:function (){
-                console.log(this.sel_data,this.sel_ora,this.sel_materia)
                 if (this.sel_data!==''&&this.sel_ora!==''&&this.sel_materia!==''){
                     this.lezioni =this.lezioni.filter(lezioni => (lezioni['data']===this.sel_data &&lezioni['ora']===this.sel_ora&&lezioni['nome_corso']===this.sel_materia))
                 }
@@ -1159,7 +1225,6 @@
 
             },
             filtra_lezioni_s:function (){
-                console.log(this.sel_data,this.sel_ora,this.sel_prof)
                 if (this.sel_data!==''&&this.sel_ora!==''&&this.sel_prof!==''){
                     this.lezioni =this.lezioni.filter(lezioni => (lezioni['data']===this.sel_data &&lezioni['ora']===this.sel_ora&&lezioni['ID_docente']===this.sel_prof))
                 }
@@ -1211,7 +1276,17 @@
             one_h_later:function (time) {
                  const t= new Date('1970-01-01T' + time +':00' + '-0000');
                 return (t.getHours()+':'+t.getMinutes()+'0')
+            },
+
+            add_2_gcal:function (lex){
+                const d= lex['data'].replaceAll('-','')
+                const t= lex['ora'].replaceAll(':','')
+                const t_l=this.one_h_later(lex['ora']).toString().replaceAll(':','')
+                window.open(encodeURI('https://calendar.google.com/calendar/u/0/r/eventedit?text=Lezione+di+'+lex['nome_corso']+'+con+'+lex['cognome_docente']+'+'+lex['nome_docente']+'&dates='+d+'T'+t+'00/'+d+'T'+t_l+'00Z&details=zoom.com/random_reunion&location=Metavers&sf=true&output=xml'));
             }
+
+
+
 
 
         },
@@ -1239,7 +1314,6 @@
                 this.selector_ora=this.remuve_duplicates(this.selector_ora)
                 this.selector_materie=this.remuve_duplicates(this.selector_materie)
                 this.get_docenti_by_corso()
-                console.log(this.selector_professore)
             },
 
 
@@ -1252,100 +1326,3 @@
 
 </body>
 </html>
-
-
-<!--<div v-if="professor_is_selected" id="selected professor">-->
-<!--</div>-->
-<!--<div class="container">-->
-<!--    <div class="container">-->
-<!--        <div class="timetable-img text-center">-->
-<!--            <img src="img/content/timetable.png" alt="">-->
-<!--        </div>-->
-<!--        <div class="table-responsive">-->
-<!--            <table class="table table-bordered text-center">-->
-<!--                <thead>-->
-<!--                <tr class="bg-light-gray">-->
-
-<!--                    <th class="text-uppercase">Lunedi</th>-->
-<!--                    <th class="text-uppercase">Martedi</th>-->
-<!--                    <th class="text-uppercase">Mercoledi</th>-->
-<!--                    <th class="text-uppercase">Giovedi</th>-->
-<!--                    <th class="text-uppercase">Venerdi</th>-->
-<!--                </tr>-->
-<!--                </thead>-->
-<!--                <tbody>-->
-<!--                <tr id="1">-->
-
-<!--                    <td v-for="n in 5">-->
-<!--                        <div class="dropdown">-->
-<!--                            <button class="btn btn-primary  block dropdown-toggle" style="flex-grow: 1; width: 100%"id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Prenota</button>-->
-<!--                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">-->
-<!--                                <a class="dropdown-item" href="#">Matematica</a>-->
-<!--                                <a class="dropdown-item" href="#">Italiano</a>-->
-<!--                                <a class="dropdown-item" href="#">Storia</a>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="margin-10px-top font-size14">15:00-16:00</div>-->
-
-<!--                    </td>-->
-
-<!--                </tr>-->
-
-<!--                <tr id="2">-->
-
-<!--                    <td v-for="n in 5">-->
-<!--                        <div class="dropdown">-->
-<!--                            <button class="btn btn-primary  block dropdown-toggle" style="flex-grow: 1; width: 100%" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Prenota</button>-->
-<!--                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">-->
-<!--                                <a class="dropdown-item" href="#">Matematica</a>-->
-<!--                                <a class="dropdown-item" href="#">Italiano</a>-->
-<!--                                <a class="dropdown-item" href="#">Storia</a>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="margin-10px-top font-size14">16:00-17:00</div>-->
-
-<!--                    </td>-->
-
-<!--                </tr>-->
-
-<!--                <tr id="3">-->
-
-<!--                    <td v-for="n in 5">-->
-<!--                        <div class="dropdown">-->
-<!--                            <button class="btn btn-primary  block dropdown-toggle" style="flex-grow: 1; width: 100%" id="dropdownMenuButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Prenota</button>-->
-<!--                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton3">-->
-<!--                                <a class="dropdown-item" href="#">Matematica</a>-->
-<!--                                <a class="dropdown-item" href="#">Italiano</a>-->
-<!--                                <a class="dropdown-item" href="#">Storia</a>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="margin-10px-top font-size14">17:00-18:00</div>-->
-
-<!--                    </td>-->
-
-<!--                </tr>-->
-
-<!--                <tr id="4">-->
-
-<!--                    <td v-for="n in 5">-->
-<!--                        <div class="dropdown">-->
-<!--                            <button class="btn btn-primary  block dropdown-toggle" style="flex-grow: 1; width: 100%" id="dropdownMenuButton4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Prenota</button>-->
-<!--                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton4">-->
-<!--                                <a class="dropdown-item" href="#">Matematica</a>-->
-<!--                                <a class="dropdown-item" href="#">Italiano</a>-->
-<!--                                <a class="dropdown-item" href="#">Storia</a>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="margin-10px-top font-size14">18:00-17900</div>-->
-
-<!--                    </td>-->
-
-<!--                </tr>-->
-
-
-<!--                </tbody>-->
-<!--            </table>-->
-<!--        </div>-->
-<!--    </div>-->
-
-<!--</div>-->
