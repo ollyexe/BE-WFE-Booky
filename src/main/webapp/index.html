@@ -22,7 +22,7 @@
 
     <div id="app" >
 
-        <div v-if="role>-1">
+        <div v-if="role===1||role===0">
             <div v-if="role>-1" id="nav_Bar">
                 <nav class="navbar navbar-expand-lg navbar-light bg-navBar">
                 <a class="navbar-brand" href="#"></a>
@@ -69,13 +69,12 @@
                             <a v-if="role===2" class="nav-link " href="#" >Inserisci Docenti</a>
                         </li>
                         <li class="nav-item">
-                            <a v-if="role===0||role===1" class="nav-link " href="#" >Assistenza</a>
+                            <a v-if="role===0||role===1" @click="help_transition" class="nav-link " href="#" >Assistenza</a>
                         </li>
                     </ul>
                 </div>
             </nav>
             </div>
-
 
             <div v-if="home" id="home_page" >
                 <section id="cover" >
@@ -705,6 +704,12 @@
 
         </div>
 
+        <div v-if="role===2">
+
+        </div>
+
+<!--       <div v-if="role===2"></div>-->
+
         <div v-if="role===-1" id="login_page" class="box__p">
             <div class="container__p">
                 <form action="signup/signUp.html">
@@ -764,6 +769,7 @@
                history_page:false,
                bookings_page:false,
                for_confirmation:false,
+               help:false,
 
                role : -1,//-1= none 0 = guest 1 = user 2 = admin
 
@@ -825,6 +831,7 @@
                 this.professor_is_selected=false
                 this.subj_is_selected=false
                 this.for_confirmation=false
+                this.help=false
                 document.title='Home'
 
 
@@ -841,6 +848,7 @@
                 this.professor_is_selected=false
                 this.subj_is_selected=false
                 this.for_confirmation=false
+                this.help=false
                 document.title='Profile'
             },
             selector_transition: function () {
@@ -855,6 +863,7 @@
                 this.professor_is_selected=false
                 this.subj_is_selected=false
                 this.for_confirmation=false
+                this.help=false
                 document.title='Selettore'
             },
             professors_page_transition: function () {
@@ -869,6 +878,7 @@
                 this.professor_is_selected=false
                 this.subj_is_selected=false
                 this.for_confirmation=false
+                this.help=false
                 document.title='Professori'
             },
             subject_page_transition: function () {
@@ -883,6 +893,7 @@
                 this.professor_is_selected=false
                 this.subj_is_selected=false
                 this.for_confirmation=false
+                this.help=false
                 document.title='Materie'
             },
             cart_transition: function () {
@@ -897,6 +908,7 @@
                 this.professor_is_selected=false
                 this.subj_is_selected=false
                 this.for_confirmation=false
+                this.help=false
                 document.title='Carrello'
             },
             selected_professor_transition: function (sel_p) {
@@ -912,6 +924,7 @@
                 this.subj_is_selected=false
                 this.selected_professore=sel_p
                 this.for_confirmation=false
+                this.help=false
 
                 document.title='Professore Selezionato'
 
@@ -930,7 +943,7 @@
                 this.subj_is_selected=true
                 this.selected_materia=sel_s
                 this.for_confirmation=false
-
+                this.help=false
                 document.title='Materia Selezionata'
 
 
@@ -948,6 +961,7 @@
                 this.history_page=false
                 this.bookings_page=false
                 this.for_confirmation=false
+                this.help=false
                 document.title='Login'
             },
             order_transition: function () {
@@ -963,6 +977,7 @@
                 this.bookings_page=false
                 this.for_confirmation=false
                 this.get_lezioni_concluse
+                this.help=false
                 document.title='Ordini Conclusi'
             },
             bookings_transition: function () {
@@ -977,6 +992,7 @@
                 this.history_page=false
                 this.bookings_page=true
                 this.for_confirmation=false
+                this.help=false
                 this.get_lezioni_prenotate()
                 document.title='Prenotazioni'
             },
@@ -992,8 +1008,24 @@
                 this.history_page=false
                 this.bookings_page=false
                 this.for_confirmation=true
+                this.help=false
                 this.get_lezioni_da_confermare()
                 document.title='Da Confermare'
+            },
+            help_transition: function () {
+                this.home = false;
+                this.profile = false;
+                this.selector = false;
+                this.professors_page = false;
+                this.subjects_page=false
+                this.cart=false
+                this.professor_is_selected=false
+                this.subj_is_selected=false
+                this.history_page=false
+                this.bookings_page=false
+                this.for_confirmation=false
+                this.help=true
+                document.title='Assistenza'
             },
 
 
