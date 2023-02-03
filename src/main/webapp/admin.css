@@ -1,0 +1,248 @@
+/*
+    Admin
+ */
+.body-admin {
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+.h1-admin .h2-admin{
+    color: #444;
+}
+.h3-admin {
+    color: #999;
+}
+.brand-name{
+    color: #FFFFFF;
+}
+.title-admin {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 15px 10px;
+    border-bottom: 2px solid #999;
+}
+.table-admin {
+    padding: 10px;
+}
+.th-admin{
+    text-align: left;
+    padding: 8px;
+}
+.td-admin{
+    text-align: left;
+    padding: 8px;
+}
+.side-menu-admin {
+    position: fixed;
+    background: #3498db;
+    width: 20vw;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.side-menu-admin .brand-name {
+    height: 10vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.side-menu-admin li {
+    font-size: 24px;
+    padding: 10px 40px;
+    color: white;
+    display: flex;
+    align-items: center;
+}
+.side-menu-admin li:hover {
+    background: white;
+    color: #f05462;
+}
+.container-admin {
+    position: absolute;
+    right: 0;
+    width: 80vw;
+    height: 100vh;
+    background: #f1f1f1;
+    flex: 3;
+    display: flex;
+    justify-content: center;
+}
+.container-admin .content-admin {
+    position: relative;
+    margin-top: 10vh;
+    min-height: 90vh;
+    background: #f1f1f1;
+}
+.container-admin .content-admin .cards-admin {
+    padding: 20px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.container-admin .content-admin .cards-admin .card-admin {
+    width: 250px;
+    height: 150px;
+    background: white;
+    margin: 20px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.container-admin .content-admin .content-2-admin {
+    min-height: 60vh;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+.container-admin .content-admin .content-2-admin .book_lesson {
+    min-height: 50vh;
+    flex: 5;
+    background: white;
+    margin: 0 25px 25px 25px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    display: flex;
+    flex-direction: column;
+}
+.container-admin .content-admin .content-2-admin .new-students {
+    flex: 2;
+    background: white;
+    min-height: 50vh;
+    margin: 0 25px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    display: flex;
+    flex-direction: column;
+}
+
+
+.form-admin{
+    padding: 10px;
+}
+.form-admin input{
+    margin-top: 20px;
+    height: 30px;
+    width: 93%;
+    padding: 0 10px;
+    border-radius: 3px;
+    border: 1px solid silver;
+    font-size: 18px;
+    outline: none;
+}
+
+.form-admin input[type="submit"]{
+    margin: 40px 0 0 105px;
+    width: 110px;
+    height: 45px;
+    color: white;
+    cursor: pointer;
+    line-height: 45px;
+    border-radius: 45px;
+    border-radius: 5px;
+    background: #3498db;
+}
+
+/*
+    Help
+*/
+.body-help{
+    background-image: linear-gradient(120deg,#3498db,#8e44ad);
+    width: 100%;
+    height: 100vh;
+    background-size: 100% 110vh;
+    position: relative;
+    background-repeat: no-repeat;
+    padding: 0;
+    margin: 0;
+    color: #fff;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    border: none;
+}
+.header-help{
+    position: absolute;
+    text-align: center;
+    width: 75%;
+    left: 12%;
+    top: 2rem;
+}
+.content-help{
+    display: flex;
+    min-height: 110vh;
+}
+.content-help section{
+    margin-top: 8vh;
+    margin-left: 20vh;
+}
+.content-form{
+    margin-top: 7rem;
+}
+.form-help{
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-left: 50%;
+    justify-content: center;
+    align-items: center;
+    min-height: 110vh;
+}
+
+.form-help .contact-form input{
+    width: 30rem;
+    background-color: transparent;
+    border: 0px;
+    border: transparent;
+    margin: 20px;
+    padding: 10px;
+    font-size: 18px;
+    border-bottom: 2px solid #fff;
+}
+.form-help .contact-form input ~ span{
+    position: absolute;
+    left: 20px;
+    transition: 0.9s ease-in-out;
+    margin-top: 10px;
+}
+.form-help .contact-form input:focus ~span{
+    transform: translateY(-20px); /*le scritte si spostano in su quando clicco sul banner*/
+    pointer-events: none;
+}
+.form-help .contact-form textarea{
+    width: 30rem;
+    border: 0px;
+    background-color: transparent;
+    margin: 20px;
+    font-size: 17px;
+    border-bottom: 2px solid white;
+}
+.form-help .contact-form textarea ~ span
+{
+    position: absolute;
+    left: 20px;
+    margin-top: 10px;
+    transition: 0.9s ease-in-out;
+}
+.form-help .contact-form textarea:focus ~span{
+    transform: translateY(-20px);
+    pointer-events: none;
+}
+.form-help .contact-form input[type=submit]{
+    background-color: dodgerblue;
+    border: 2px solid dodgerblue;
+    font-size: 18px;
+    width: 50%;
+    height: 45px;
+    margin-top: -5px;
+}
+.form-help .contact-form input[type=submit]:hover{
+    background-color: transparent;
+    color: dodgerblue;
+}
+
+
+
