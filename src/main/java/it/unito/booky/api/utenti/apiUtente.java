@@ -75,9 +75,6 @@ public class apiUtente extends HttpServlet {
 
                                 "}");
                         out.flush();
-                         HttpSession s = request.getSession();
-                         s.setAttribute("login_state",true);
-                         s.setAttribute("email",u.getEmail());
 
                     }
                      else {
@@ -89,6 +86,53 @@ public class apiUtente extends HttpServlet {
 
                                      "}");
                              out.flush();
+
+
+                    }
+                    break;
+                }
+            }
+            case "loginWeb" : {
+                if (dao == null) {
+                    out.println("dao is null");
+                }else {
+                    String userName = request.getParameter("mail");
+                    String password = request.getParameter("pass");
+                    Utente u = dao.getUtente(userName);
+
+                    if(u==null){
+                        out.print("{" +
+                                "\"login_state\"" + ":" + "\"other\"" +" ,"+
+                                "\"state_description\"" + ":" + "\"User not exists\"" +
+
+                                "}");
+                        out.flush();
+                        break;
+                    }
+
+
+                    if (Dao.checkMD5(u.getPassword(), password)&&u!=null) {
+
+                        out.print("{" +
+                                "\"login_state\"" + ":" + "\"true\"" +" ,"+
+                                "\"state_description\"" + ":" + "\"successful login\"" +
+
+                                "}");
+                        out.flush();
+                        HttpSession s = request.getSession();
+                        s.setAttribute("login_state",true);
+                        s.setAttribute("email",u.getEmail());
+
+                    }
+                    else {
+
+
+                        out.print("{" +
+                                "\"login_state\"" + ":" + "\"false\"" +" ,"+
+                                "\"state_description\"" + ":" + "\"Password does not match\"" +
+
+                                "}");
+                        out.flush();
 
 
                     }
@@ -120,7 +164,7 @@ public class apiUtente extends HttpServlet {
                     //se check false si procede con la insertion
 
                     try {
-                        if(dao.insertUtente(new Utente(0,email,password,nome,cognome,"utente"))){
+                        if(dao.insertUtente(email,password,nome,cognome)){
                             out.print("{" +
                                     "\"registration_state\"" + ":" + "\"succesful\"" +" ,"+
                                     "\"state_description\"" + ":" + "\"user succesfuly registred\"" +
@@ -130,6 +174,42 @@ public class apiUtente extends HttpServlet {
                         else {
                             out.print("{" +
                                     "\"registration_state\"" + ":" + "\"fail\"" +" ,"+
+                                    "\"state_description\"" + ":" + "\"failed to register\"" +
+                                    "}");
+                            out.flush();
+                        }
+
+                    }
+                    catch (Error erro){
+                        out.print("{" +
+                                "\"registration_state\"" + ":" + "\"exists\"" +" ,"+
+                                "\"state_description\"" + ":" + "\"user with this email already exists\"" +
+                                "}");
+                        out.flush();
+                    }
+
+                }
+                break;
+            }
+            case "insertDocente" : {
+                if (dao == null) {
+                    out.println("dao is null");
+                } else {
+                    String email = request.getParameter("mail");
+                    String password = request.getParameter("pass");
+                    String nome = request.getParameter("nome");
+                    String cognome = request.getParameter("cognome");
+                    try {
+                        if(dao.insertDocente(email,password,nome,cognome)){
+                            out.print("{" +
+                                    "\"registration_state\"" + ":" + "\"true\"" +" ,"+
+                                    "\"state_description\"" + ":" + "\"user succesfuly registred\"" +
+                                    "}");
+                            out.flush();
+                        }
+                        else {
+                            out.print("{" +
+                                    "\"registration_state\"" + ":" + "\"false\"" +" ,"+
                                     "\"state_description\"" + ":" + "\"failed to register\"" +
                                     "}");
                             out.flush();
@@ -244,14 +324,14 @@ public class apiUtente extends HttpServlet {
                 }
                 break;
             }
-            case "deleteUtente" : {
+            case "deleteDocente" : {
                 if (dao == null) {
                     out.println("dao is null");
                 } else {
                     boolean flag= false;
                     String email = request.getParameter("mail");
                     try {
-                        flag = dao.deleteUtente(email);
+                        flag = dao.deleteDocente(email);
                         if(flag){
                             out.print("{" +
                                     "\"delete_state\"" + ":" + "\"succes\"" +" ,"+
@@ -336,6 +416,42 @@ public class apiUtente extends HttpServlet {
                 }
                 break;
             }
+            case "getDocentiAttivi" : {
+                if (dao == null) {
+                    out.println("dao is null");
+                } else {
+                    int i = 0;
+                    ArrayList<Utente> docenti = dao.getDocentiAttivi();
+                    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+                    out.println( "[");
+                    for (Utente u : docenti){
+                        out.println( "{");
+                        out.println("\"ID\"" + ":" + "\""+u.getID()+ "\"" + ",");
+                        out.println("\"email\"" + ":" + "\""+u.getEmail()+ "\"" + ",");
+                        out.println("\"password\"" + ":" + "\""+u.getPassword()+ "\"" + ",");
+                        out.println("\"nome\"" + ":" + "\""+u.getNome()+ "\"" + ",");
+                        out.println("\"cognome\"" + ":" + "\""+u.getCognome()+ "\"" + ",");
+                        out.println("\"pf\"" + ":" + "\""+u.getPf()+ "\"" + ",");
+                        out.println("\"stelle\"" + ":" + "\""+u.getStelle()+ "\"" + ",");
+
+                        out.println( "\"corsi\"" + ":"+gson.toJson(JsonParser.parseString(gson.toJson(dao.getCorsiByDoc(u.getEmail())))) );
+                        out.println("     }");
+                        if(i<docenti.size()-1){
+                            i++;
+                            out.print(",");
+                        }
+                    }
+                    out.println( "]");
+
+
+                    out.flush();
+
+
+                }
+                break;
+            }
+
 
 
 

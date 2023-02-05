@@ -25,7 +25,8 @@
         <div v-if="role===1||role===0">
             <div v-if="role>-1" id="nav_Bar">
                 <nav class="navbar navbar-expand-lg navbar-light bg-navBar">
-                <a class="navbar-brand" href="#"></a>
+                <a v-if="role===1" class="navbar-brand text-white" >Benvenut* {{utente['nome']}}</a>
+                    <a v-if="role===0" class="navbar-brand text-white" href="#">Benvenut* Guest</a>
                 <button class="navbar-toggler float-right collapsed" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon "></span>
                 </button>
@@ -34,9 +35,7 @@
                         <li class="nav-item active">
                             <a @click="home_transition" class="nav-link" href="#">Home </a>
                         </li>
-                        <li  class="nav-item">
-                            <a v-if="role===1" @click="profile_transition" class="nav-link" href="#" >Profilo</a>
-                        </li>
+
                         <li  class="nav-item">
                             <a v-if="role===0" @click="go_to_loginpage" class="nav-link" href="#">Login</a>
                         </li>
@@ -71,13 +70,16 @@
                         <li class="nav-item">
                             <a v-if="role===0||role===1" @click="help_transition" class="nav-link " href="#" >Assistenza</a>
                         </li>
+                        <li  class="nav-item">
+                            <a v-if="role===1" @click="logout" class="nav-link text-danger" href="#" >Logout</a>
+                        </li>
                     </ul>
                 </div>
             </nav>
             </div>
 
             <div v-if="home" id="home_page" >
-             <!--   <section id="cover" >
+                <section id="cover" >
                     <div class="p-3 mb-2 bg-filter__p"></div>
                     <div class="cover__caption justify-content-center">
                         <div class="cover__caption__copy">
@@ -88,7 +90,7 @@
                             <a v-if="role===1" @click="selector_transition" class=" btn button__p">Acquista lezioni</a>
                         </div>
                     </div>
-                </section>-->
+                </section>
 
 
 
@@ -96,133 +98,7 @@
 
                 <!--Admin-->
 
-<!--
-               <div class="body-admin">
-                <div class="side-menu-admin">
-                    <div class="brand-name">
-                        <h1 class="h1-admin">Admin</h1>
-                    </div>
-                    <ul>
-                        <li><a href="" class="li-admin">Dashboard</a> </li>
-                        <li><a href="lessons.html" class="li-admin">Lezioni</a></li>
-                        <li><a href="students.html" class="li-admin">Studenti</a></li>
-                        <li><a href="professors.html" class="li-admin">Professori</a></li>
-                        <li><a href="" class="li-admin">Logout</a></li>
 
-                    </ul>
-                </div>
-                <div class="container-admin">
-
-                    <div class="content-admin">
-                        <div class="cards-admin">
-                            <div class="card-admin">
-                                <div class="box-admin">
-                                    <h1 class="h1-admin">10</h1>
-                                    <h3 class="h3-admin">Lezioni Totali</h3>
-                                </div>
-
-                            </div>
-                            <div class="card-admin">
-                                <div class="box-admin">
-                                    <h1 class="h1-admin">5</h1>
-                                    <h3 class="h3-admin">Lezioni Prenotate</h3>
-                                </div>
-                            </div>
-                            <div class="card-admin">
-                                <div class="box-admin">
-                                    <h1 class="h1-admin">5</h1>
-                                    <h3 class="h3-admin">Lezioni Disponibili</h3>
-                                </div>
-                            </div>
-                            <div class="card-admin">
-                                <div class="box-admin">
-                                    <h1 class="h1-admin">20</h1>
-                                    <h3 class="h3-admin">Numero Studenti</h3>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="content-2-admin">
-                            <div class="book_lesson">
-                                <div class="title-admin">
-                                    <h2 class="h2-admin">Lezioni Programmate</h2>
-                                </div>
-                                <table class="table-admin">
-                                    <tr>
-                                        <th class="th-admin">Studente</th>
-                                        <th class="th-admin">Professore</th>
-                                        <th class="th-admin">Data</th>
-                                        <th class="th-admin">Ora</th>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome Cognome</td>
-                                        <td class="td-admin">Prof. Nome Cognome</td>
-                                        <td class="td-admin">2023-02-18</td>
-                                        <td class="td-admin">18:00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome Cognome</td>
-                                        <td class="td-admin">Prof. Nome Cognome</td>
-                                        <td class="td-admin">2023-02-18</td>
-                                        <td class="td-admin">18:00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome Cognome</td>
-                                        <td class="td-admin">Prof. Nome Cognome</td>
-                                        <td class="td-admin">2023-02-18</td>
-                                        <td class="td-admin">18:00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome Cognome</td>
-                                        <td class="td-admin">Prof. Nome Cognome</td>
-                                        <td class="td-admin">2023-02-18</td>
-                                        <td class="td-admin">18:00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome Cognome</td>
-                                        <td class="td-admin">Prof. Nome Cognome</td>
-                                        <td class="td-admin">2023-02-18</td>
-                                        <td class="td-admin">18:00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome Cognome</td>
-                                        <td class="td-admin">Prof. Nome Cognome</td>
-                                        <td class="td-admin">2023-02-18</td>
-                                        <td class="td-admin">18:00</td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div class="new-students">
-                                <div class="title-admin">
-                                    <h2 class="h2-admin">Nuovi Studenti</h2>
-                                </div>
-                                <table class="table-admin">
-                                    <tr>
-                                        <th class="td-admin">Nome</th>
-                                        <th class="th-admin">Cognome</th>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome</td>
-                                        <td class="td-admin">Cognome</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome</td>
-                                        <td class="td-admin">Cognome</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome</td>
-                                        <td class="td-admin">Cognome</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome</td>
-                                        <td class="td-admin">Cognome</td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                </div>
--->
 
 
 
@@ -230,310 +106,22 @@
 
                 <!--Help-->
 
-                <div class="container-help">
-                    <header class="header-help">
-                        <h1>Contattaci</h1>
-                        <p>Se riscontri dei problemi puoi contattarci compilando i dati sottostanti</p>
-                    </header>
-                    <div class="content-help">
-                        <div class="content-form">
-                            <section>
-                                <i class="fa fa-envelope fa-2x" aria-hidden="true"></i>
-                                <h2>E-mail</h2>
-                                <p>supporto.appandroid@gmail.com</p>
-                            </section>
-                        </div>
-                    </div>
 
-                    <form>
-                        <div class="form-help">
-                            <div class="right">
-                                <div class="contact-form">
-                                    <input type="text" required>
-                                    <span>Nome</span>
-                                </div>
-
-                                <div class="contact-form">
-                                    <input type="E-mail" required>
-                                    <span>E-mail</span>
-                                </div>
-                                <div class="contact-form">
-                  <textarea name="text">
-
-                  </textarea>
-                                    <span> Scrivi un messaggio....</span>
-                                </div>
-
-                                <div class="contact-form">
-                                    <input type="submit" name="submit">
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
 
 
 
 
 <!--Lessons-->
-<!--
-                <div class="body-admin">
-                <div class="side-menu-admin">
-                    <div class="brand-name">
-                        <h1 class="h1-admin">Admin</h1>
-                    </div>
-                    <ul>
-                        <li><a href="admin.html" class="li-admin">Dashboard</a> </li>
-                        <li><a href="" class="li-admin">Lezioni</a></li>
-                        <li><a href="students.html" class="li-admin">Studenti</a></li>
-                        <li><a href="professors.html" class="li-admin">Professori</a></li>
-                        <li><a href="" class="li-admin">Logout</a></li>
 
-                    </ul>
-                </div>
-                <div class="container-admin">
-
-                    <div class="content-admin">
-                        <div class="content-2-admin">
-                            <div class="book_lesson">
-                                <div class="title-admin">
-                                    <h2>Lezioni Programmate</h2>
-                                </div>
-                                <table>
-                                    <tr>
-                                        <th class="th-admin">Studente</th>
-                                        <th class="th-admin">Professore</th>
-                                        <th class="th-admin">Data</th>
-                                        <th class="th-admin">Ora</th>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome Cognome</td>
-                                        <td class="td-admin">Prof. Nome Cognome</td>
-                                        <td class="td-admin">2023-02-18</td>
-                                        <td class="td-admin">18:00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome Cognome</td>
-                                        <td class="td-admin">Prof. Nome Cognome</td>
-                                        <td class="td-admin">2023-02-18</td>
-                                        <td class="td-admin">18:00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome Cognome</td>
-                                        <td class="td-admin">Prof. Nome Cognome</td>
-                                        <td class="td-admin">2023-02-18</td>
-                                        <td class="td-admin">18:00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome Cognome</td>
-                                        <td class="td-admin">Prof. Nome Cognome</td>
-                                        <td class="td-admin">2023-02-18</td>
-                                        <td class="td-admin">18:00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome Cognome</td>
-                                        <td class="td-admin">Prof. Nome Cognome</td>
-                                        <td class="td-admin">2023-02-18</td>
-                                        <td class="td-admin">18:00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome Cognome</td>
-                                        <td class="td-admin">Prof. Nome Cognome</td>
-                                        <td class="td-admin">2023-02-18</td>
-                                        <td class="td-admin">18:00</td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div class="new-students">
-                                <div class="title-admin">
-                                    <h2>Lezioni Disponibili</h2>
-                                </div>
-                                <table>
-                                    <tr>
-                                        <th class="th-admin">Materia</th>
-                                        <th class="th-admin">Data</th>
-                                        <th class="th-admin">Ora</th>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Materia</td>
-                                        <td class="td-admin">Data</td>
-                                        <td class="td-admin">Ora</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Materia</td>
-                                        <td class="td-admin">Data</td>
-                                        <td class="td-admin">Ora</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Materia</td>
-                                        <td class="td-admin">Data</td>
-                                        <td class="td-admin">Ora</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Materia</td>
-                                        <td class="td-admin">Data</td>
-                                        <td class="td-admin">Ora</td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                </div>-->
 
 
 
 <!--Students-->
 
-                <!--
-                <div class="body-admin">
-                <div class="side-menu-admin">
-                    <div class="brand-name">
-                        <h1 class="h1-admin">Admin</h1>
-                    </div>
-                    <ul>
-                        <li><a href="admin.html" class="li-admin">Dashboard</a> </li>
-                        <li><a href="lessons.html" class="li-admin">Lezioni</a></li>
-                        <li><a href="" class="li-admin">Studenti</a></li>
-                        <li><a href="professors.html" class="li-admin">Professori</a></li>
-                        <li><a href="" class="li-admin">Logout</a></li>
 
-                    </ul>
-                </div>
-                <div class="container-admin">
-
-                    <div class="content-admin">
-                        <div class="content-2-admin">
-                            <div class="book_lesson">
-                                <div class="title-admin">
-                                    <h2>Studenti</h2>
-                                </div>
-                                <table>
-                                    <tr>
-                                        <th class="th-admin">Nome</th>
-                                        <th class="th-admin">Cognome</th>
-                                        <th class="th-admin">Lezioni</th>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome</td>
-                                        <td class="td-admin">Cognome</td>
-                                        <td class="td-admin">10</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome</td>
-                                        <td class="td-admin">Cognome</td>
-                                        <td class="td-admin">2</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome</td>
-                                        <td class="td-admin">Cognome</td>
-                                        <td class="td-admin">5</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome</td>
-                                        <td class="td-admin">Cognome</td>
-                                        <td class="td-admin">0</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome</td>
-                                        <td class="td-admin">Cognome</td>
-                                        <td class="td-admin">3</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome</td>
-                                        <td class="td-admin">Cognome</td>
-                                        <td class="td-admin">7</td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                </div>
--->
 
                 <!--Professor-->
-         <!--       <div class="body-admin">
-                <div class="side-menu-admin">
-                    <div class="brand-name">
-                        <h1 class="h1-admin">Admin</h1>
-                    </div>
-                    <ul>
-                        <li><a href="admin.html" class="li-admin">Dashboard</a> </li>
-                        <li><a href="lessons.html" class="li-admin">Lezioni</a></li>
-                        <li><a href="students.html" class="li-admin">Studenti</a></li>
-                        <li><a href="professors.html" class="li-admin">Professori</a></li>
-                        <li><a href="" class="li-admin">Logout</a></li>
 
-                    </ul>
-                </div>
-                <div class="container-admin">
-
-                    <div class="content-admin">
-                        <div class="content-2-admin">
-                            <div class="book_lesson">
-                                <div class="title-admin">
-                                    <h2>Professori</h2>
-                                </div>
-                                <table>
-                                    <tr>
-                                        <th class="th-admin">Nome</th>
-                                        <th class="th-admin">Cognome</th>
-                                        <th class="th-admin">Materia</th>
-
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome</td>
-                                        <td class="td-admin">Cognome</td>
-                                        <td class="td-admin">Materia</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome</td>
-                                        <td class="td-admin">Cognome</td>
-                                        <td class="td-admin">Materia</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome</td>
-                                        <td class="td-admin">Cognome</td>
-                                        <td class="td-admin">Materia</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome</td>
-                                        <td class="td-admin">Cognome</td>
-                                        <td class="td-admin">Materia</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome</td>
-                                        <td class="td-admin">Cognome</td>
-                                        <td class="td-admin">Materia</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome</td>
-                                        <td class="td-admin">Cognome</td>
-                                        <td class="td-admin">Materia</td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div class="new-students">
-                                <div class="title-admin">
-                                    <h2>Registra Professore</h2>
-                                </div>
-                                <form class="form-admin">
-                                    <input type="text" placeholder="Nome">
-                                    <input type="text" placeholder="Cognome">
-                                    <input type="text" placeholder="Materia">
-                                    <input type="submit" value="Registra">
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                </div>
-
-
--->
 
 
 
@@ -1018,64 +606,46 @@
                 </section>
             </div>
 
+            <div v-if="help" class="container-help" style="position: fixed">
+                <header class="header-help">
+                    <h1>Contattaci</h1>
+                    <p>Se riscontri dei problemi puoi contattarci compilando i dati sottostanti</p>
+                </header>
+                <div class="content-help">
+                    <div class="content-form">
+                        <section>
+                            <i class="fa fa-envelope fa-2x" aria-hidden="true"></i>
+                            <h2>E-mail</h2>
+                            <p>supporto.appandroid@gmail.com</p>
+                        </section>
+                    </div>
+                </div>
 
+                <form>
+                    <div class="form-help">
+                        <div class="right">
+                            <div class="contact-form">
+                                <input type="text" required>
+                                <span>Nome</span>
+                            </div>
 
-            <div v-if="profile" id="profile_page">
-                <section class="vh-100" style=" background-image: linear-gradient(120deg,#3498db,#8e44ad);">
-                    <div class="container py-5 h-100">
-                        <div class="row d-flex justify-content-center align-items-center h-100">
-                            <div class="col col-lg-6 mb-4 mb-lg-0">
-                                <div class="card mb-3" style="border-radius: .5rem;">
-                                    <div class="row g-0">
-                                        <div class="col-md-4 gradient-custom text-center text-white"
-                                             style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
-                                            <img class="rounded-circle img-fluid my-5" alt="avatar1" :src="utente['pf']" style="width: 80px;" />
-                                            <h5>{{utente['nome']}} {{utente['cognome']}}</h5>
-                                            <p>{{utente['ruolo']}}</p>
-                                            <i class="far fa-edit mb-5"></i>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <div class="card-body p-4">
-                                                <h6>Dati</h6>
-                                                <hr class="mt-0 mb-4">
-                                                <div class="row pt-1">
-                                                    <div class="col-6 mb-3">
-                                                        <h6>Email</h6>
-                                                        <p class="text-muted">{{ email }}</p>
-                                                    </div>
-                                                    <div class="col-6 mb-3">
-                                                        <h6>Phone</h6>
-                                                        <p class="text-muted">123 456 789</p>
-                                                    </div>
-                                                </div>
+                            <div class="contact-form">
+                                <input type="E-mail" required>
+                                <span>E-mail</span>
+                            </div>
+                            <div class="contact-form">
+                  <textarea name="text">
 
-                                                <hr class="mt-0 mb-4">
-                                                <div class="row pt-1">
-                                                    <div class="col-6 mb-3">
-                                                        <h6>Recent</h6>
-                                                        <p class="text-muted">Lorem ipsum</p>
-                                                    </div>
-                                                    <div class="col-6 mb-3">
-                                                        <h6>Most Viewed</h6>
-                                                        <p class="text-muted">Dolor sit amet</p>
-                                                    </div>
-                                                </div>
+                  </textarea>
+                                <span> Scrivi un messaggio....</span>
+                            </div>
 
-                                                <div class="btn-group-lg">
-                                                    <button @click="reloadPage" class="btn btn-danger text-white"  >Logout</button>
-                                                    <button  class="btn bg-navBar text-white " style="float: right"  >Modifica Dati</button>
-                                                </div>
-
-
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="contact-form">
+                                <input type="submit" name="submit">
                             </div>
                         </div>
                     </div>
-                </section>
+                </form>
             </div>
             <div v-if="cart" id="cart_page">
                 <section class="" style="height: 91vh">
@@ -1173,10 +743,379 @@
         </div>
 
         <div v-if="role===2">
+            <div v-if="role===2" id="nav_Bar_admin">
+                <nav class="navbar navbar-expand-lg navbar-light bg-navBar">
+                    <a class="navbar-brand" href="#"></a>
+                    <button class="navbar-toggler float-right collapsed" type="button" data-toggle="collapse" data-target="#navbarNav_admin" aria-controls="navbarNav_admin" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon "></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav_admin">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item active">
+                                <a @click="home_transition_admin" class="nav-link" href="#">Dashboard </a>
+                            </li>
+                            <li  class="nav-item">
+                                <a v-if="role===1" @click="profile_transition" class="nav-link" href="#" >Profilo</a>
+                            </li>
+
+                            <li class="dropdown nav-item">
+                                <a href="#" class=" nav-link " data-toggle="dropdown"  aria-expanded="false">Inserisci <i class="fa-solid fa-2xs fa-caret-square-down"></i></a>
+                                <ul class="dropdown-menu bg-navBar" role="menu">
+                                    <li class="nav-item">
+                                        <a v-if="role===2" @click="docente_transition_admin" class="nav-link  " href="#" >Docente</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a v-if="role===2" @click="corso_transition_admin" class="nav-link "  href="#" >Corso</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a v-if="role===2" @click="docenza_transition_admin" class="nav-link "  href="#" >Docenza</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+
+
+
+
+
+                            <li class="nav-item">
+                                <a v-if="role===2" class="nav-link " @click="storici_transition_admin" href="#" >Visualizza Storici</a>
+                            </li>
+                            <li  class="nav-item">
+                                <a v-if="role===2" @click="logout" class="nav-link text-danger" href="#" >Logout</a>
+                            </li>
+
+
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+
+
+               <div v-if="home" class="body-admin">
+
+                <div class="container-admin">
+
+                    <div class="content-admin">
+                        <div class="cards-admin">
+                            <div class="card-admin">
+                                <div class="box-admin">
+                                    <h1 class="h1-admin">10</h1>
+                                    <h3 class="h3-admin">Lezioni Totali</h3>
+                                </div>
+
+                            </div>
+                            <div class="card-admin">
+                                <div class="box-admin">
+                                    <h1 class="h1-admin">5</h1>
+                                    <h3 class="h3-admin">Lezioni Prenotate</h3>
+                                </div>
+                            </div>
+                            <div class="card-admin">
+                                <div class="box-admin">
+                                    <h1 class="h1-admin">5</h1>
+                                    <h3 class="h3-admin">Lezioni Disponibili</h3>
+                                </div>
+                            </div>
+                            <div class="card-admin">
+                                <div class="box-admin">
+                                    <h1 class="h1-admin">20</h1>
+                                    <h3 class="h3-admin">Numero Studenti</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="content-2-admin">
+                            <div class="book_lesson">
+                                <div class="title-admin">
+                                    <h2 class="h2-admin">Lezioni Programmate</h2>
+                                </div>
+                                <table class="table-admin">
+                                    <tr>
+                                        <th class="th-admin">Studente</th>
+                                        <th class="th-admin">Professore</th>
+                                        <th class="th-admin">Data</th>
+                                        <th class="th-admin">Ora</th>
+                                    </tr>
+                                    <tr>
+                                        <td class="td-admin">Nome Cognome</td>
+                                        <td class="td-admin">Prof. Nome Cognome</td>
+                                        <td class="td-admin">2023-02-18</td>
+                                        <td class="td-admin">18:00</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="td-admin">Nome Cognome</td>
+                                        <td class="td-admin">Prof. Nome Cognome</td>
+                                        <td class="td-admin">2023-02-18</td>
+                                        <td class="td-admin">18:00</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="td-admin">Nome Cognome</td>
+                                        <td class="td-admin">Prof. Nome Cognome</td>
+                                        <td class="td-admin">2023-02-18</td>
+                                        <td class="td-admin">18:00</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="td-admin">Nome Cognome</td>
+                                        <td class="td-admin">Prof. Nome Cognome</td>
+                                        <td class="td-admin">2023-02-18</td>
+                                        <td class="td-admin">18:00</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="td-admin">Nome Cognome</td>
+                                        <td class="td-admin">Prof. Nome Cognome</td>
+                                        <td class="td-admin">2023-02-18</td>
+                                        <td class="td-admin">18:00</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="td-admin">Nome Cognome</td>
+                                        <td class="td-admin">Prof. Nome Cognome</td>
+                                        <td class="td-admin">2023-02-18</td>
+                                        <td class="td-admin">18:00</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="new-students">
+                                <div class="title-admin">
+                                    <h2 class="h2-admin">Nuovi Studenti</h2>
+                                </div>
+                                <table class="table-admin">
+                                    <tr>
+                                        <th class="td-admin">Nome</th>
+                                        <th class="th-admin">Cognome</th>
+                                    </tr>
+                                    <tr>
+                                        <td class="td-admin">Nome</td>
+                                        <td class="td-admin">Cognome</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="td-admin">Nome</td>
+                                        <td class="td-admin">Cognome</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="td-admin">Nome</td>
+                                        <td class="td-admin">Cognome</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="td-admin">Nome</td>
+                                        <td class="td-admin">Cognome</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+
+
+                <div v-if="d_storici" class="body-admin" id="storici">
+
+                <div class="container-admin">
+
+                    <div class="content-admin">
+                        <div class="content-2-admin">
+                            <div class="book_lesson">
+                                <div class="title-admin">
+                                    <h2>Lezioni Libere</h2>
+                                </div>
+                                <table>
+                                    <tr>
+                                        <th class="th-admin">Professore</th>
+                                        <th class="th-admin">Materia</th>
+                                        <th class="th-admin">Data</th>
+                                        <th class="th-admin">Ora</th>
+                                    </tr>
+                                    <tr v-for="n in 10">
+                                        <td class="td-admin">Prof. Nome Cognome</td>
+                                        <td class="td-admin">Materia</td>
+                                        <td class="td-admin">2023-02-18</td>
+                                        <td class="td-admin">18:00</td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                            <div class="book_lesson">
+                                <div class="title-admin">
+                                    <h2>Lezioni Prenotate</h2>
+                                </div>
+                                <table>
+                                    <tr>
+
+                                        <th class="th-admin">Professore</th>
+                                        <th class="th-admin">Materia</th>
+                                        <th class="th-admin">Data</th>
+                                        <th class="th-admin">Ora</th>
+                                        <th class="th-admin">Utente</th>
+
+                                    </tr>
+                                    <tr v-for="n in 5">
+                                        <td class="td-admin">>Prof.Nome Cognome</td>
+                                        <td class="td-admin">Materia</td>
+                                        <td class="td-admin">2023-02-18</td>
+                                        <td class="td-admin">18:00</td>
+                                        <td class="td-admin">Mario Rossi</td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                            <div class="book_lesson">
+                                <div class="title-admin">
+                                    <h2>Lezioni Concluse</h2>
+                                </div>
+                                <table>
+                                    <tr>
+                                        <th class="th-admin">Professore</th>
+                                        <th class="th-admin">Materia</th>
+                                        <th class="th-admin">Data</th>
+                                        <th class="th-admin">Ora</th>
+                                        <th class="th-admin">Utente</th>
+                                        <th class="th-admin">Stelle</th>
+
+                                    </tr>
+                                    <tr v v-for="n in 10">
+                                        <td class="td-admin">Prof. Nome Cognome</td>
+                                        <td class="td-admin">Materia</td>
+                                        <td class="td-admin">2023-02-18</td>
+                                        <td class="td-admin">18:00</td>
+                                        <td class="td-admin">Mario Rossi</td>
+                                        <th class="th-admin">Stelle</th>
+                                    </tr>
+
+
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                </div>
+
+                <div v-if="d_docenza" class="body-admin" id="inserimento studente">
+                <div class="container-admin">
+
+                    <div class="content-admin">
+                        <div class="content-2-admin">
+                            <div class="book_lesson">
+                                <div class="title-admin">
+                                    <h2>Studenti</h2>
+                                </div>
+                                <table>
+                                    <tr>
+                                        <th class="th-admin">Nome</th>
+                                        <th class="th-admin">Cognome</th>
+                                        <th class="th-admin">Lezioni</th>
+                                    </tr>
+                                    <tr>
+                                        <td class="td-admin">Nome</td>
+                                        <td class="td-admin">Cognome</td>
+                                        <td class="td-admin">10</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="td-admin">Nome</td>
+                                        <td class="td-admin">Cognome</td>
+                                        <td class="td-admin">2</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="td-admin">Nome</td>
+                                        <td class="td-admin">Cognome</td>
+                                        <td class="td-admin">5</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="td-admin">Nome</td>
+                                        <td class="td-admin">Cognome</td>
+                                        <td class="td-admin">0</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="td-admin">Nome</td>
+                                        <td class="td-admin">Cognome</td>
+                                        <td class="td-admin">3</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="td-admin">Nome</td>
+                                        <td class="td-admin">Cognome</td>
+                                        <td class="td-admin">7</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                </div>
+
+                 <div v-if="d_docente" class="body-admin" id="inserimento docenti">
+                <div class="container-admin">
+
+                    <div class="content-admin">
+                        <div class="content-2-admin">
+                            <div class="book_lesson">
+                                <div class="title-admin">
+                                    <h2>Professori</h2>
+                                </div>
+                                <table>
+                                    <tr>
+                                        <th class="th-admin">ID</th>
+                                        <th class="th-admin">Nome</th>
+                                        <th class="th-admin">Cognome</th>
+                                        <th class="th-admin"></th>
+
+                                    </tr>
+                                    <tr v-for="doc in docenti_attivi">
+                                        <th class="th-admin">{{doc['ID']}}</th>
+                                        <td class="td-admin">{{doc['nome']}}</td>
+                                        <td class="td-admin">{{doc['cognome']}}</td>
+                                        <td class="td-admin"></td>
+                                        <th>
+                                            <button type="button"  @click="cancela_professore(doc['email'])" class="btn btn-sm btn-danger">
+                                                Elimina
+                                            </button>
+                                        </th>
+                                    </tr>
+
+                                </table>
+                            </div>
+                            <div class="new-students">
+                                <div class="title-admin">
+                                    <h2>Registra Professore</h2>
+                                </div>
+                                <div class="form-admin">
+                                    <div class="input-group mb-3">
+
+                                        <input type="text" class="form-control" placeholder="Nome" aria-label="Username" id="nome_d" aria-describedby="basic-addon1">
+                                    </div>
+                                    <div class="input-group mb-3">
+
+                                        <input type="text" class="form-control" placeholder="Cognome" aria-label="Cognome" id="cognome_d" aria-describedby="basic-addon1">
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" placeholder="Email" @change="doc_insert_label=''" aria-label="Username" id="mail_d" aria-describedby="basic-addon1">
+                                    </div>
+                                    <div class="input-group mb-3">
+
+                                        <input type="text" class="form-control" placeholder="Password" aria-label="Username" id="pass_d" aria-describedby="basic-addon1">
+                                    </div>
+
+                                    <button @click="registra_professore(get_mail_d,get_pass_d,get_nome_d,get_cognome_d)" class="login_button"  value="Registra" type="button" style="margin-top: 30px">Registra</button>
+
+                                </div>
+                                <div >
+                                    <a  class="text-danger"  style="text-align: center;text-decoration: none" >{{doc_insert_label}}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                </div>
+
+
+
+
 
         </div>
 
-<!--       <div v-if="role===2"></div>-->
+
+
+
 
         <div v-if="role===-1" id="login_page" class="box__p">
             <div class="container__p">
@@ -1238,12 +1177,16 @@
                bookings_page:false,
                for_confirmation:false,
                help:false,
+               d_docente:false,
+               d_corso:false,
+               d_docenza:false,
+               d_storici:false,
 
                role : -1,//-1= none 0 = guest 1 = user 2 = admin
 
                login_model: '',
                utente:'',
-               login_label:'  ',
+               login_label:'',
                docenti:'',
                selected_professore :' ' ,
                selected_materia :' ' ,
@@ -1262,7 +1205,16 @@
                sel_ora:'',
                sel_materia:'',
                sel_prof:'',
-               search_button_is_hiden:false
+               search_button_is_hiden:false,
+               doc_insert_label:'',
+
+
+
+               nome_d:'',
+               cognome_d:'',
+               mail_d:'',
+               pass_d:'',
+               docenti_attivi:''
 
            }
 
@@ -1271,13 +1223,14 @@
         async mounted(){
             this.get_all_professori()
             this.get_all_materie()
+            this.get_docenti_attivi()
             await this.on_load_login()
 
 
         },
 
         methods: {
-            reloadPage: function() {
+            logout: function() {
 
                 $.get("apiUtente",{path: "logout"},
                     function (data){
@@ -1497,6 +1450,61 @@
             },
 
 
+            home_transition_admin: function () {
+                this.home = true;
+                this.d_docente=false;
+                this.d_corso=false;
+                this.d_docenza=false
+                this.d_storici=false
+
+                document.title='Home Admin'
+
+
+            },
+            corso_transition_admin: function () {
+                this.home = false;
+                this.d_docente=false;
+                this.d_corso=true;
+                this.d_docenza=false
+                this.d_storici=false
+
+                document.title='Corsi'
+
+
+            },
+            docente_transition_admin: function () {
+                this.home = false;
+                this.d_docente=true;
+                this.d_corso=false;
+                this.d_docenza=false
+                this.d_storici=false
+
+                document.title='Docenti'
+
+
+            },
+            docenza_transition_admin: function () {
+                this.home = false;
+                this.d_docente=false;
+                this.d_corso=false;
+                this.d_docenza=true
+                this.d_storici=false
+
+                document.title='Docenza'
+
+
+            },
+            storici_transition_admin: function () {
+                this.home = false;
+                this.d_docente=false;
+                this.d_corso=false;
+                this.d_docenza=false
+                this.d_storici=true
+
+                document.title='Storici'
+
+
+            },
 
             on_load_login:async function(){
                 var self=this
@@ -1536,12 +1544,13 @@
 
                 var self=this
 
-                $.get("apiUtente",{path: "login", mail: self.email, pass: this.pass},
+                $.get("apiUtente",{path: "loginWeb", mail: self.email, pass: this.pass},
                     function (data) {
                         self.login_model=data
                         if(self.login_model['login_state']==='true'){
                             $.get("apiUtente",{path: "getMiniUser", mail: self.email},
                                 function (data){
+
                                     self.utente=data
                                     if (self.utente['ruolo']==='admin'){
                                         self.role=2
@@ -1553,6 +1562,7 @@
                                         self.home_transition
                                         document.title='Home'
                                     }
+                                    console.log(self.role)
 
                                 }
                             )
@@ -1574,6 +1584,16 @@
                 await $.get("apiUtente",{path: "getAllDocenti"},
                     function (data) {
                         self.docenti=data
+                    }
+                )
+            },
+            get_docenti_attivi: async function () {
+
+                var self=this
+
+                await $.get("apiUtente",{path: "getDocentiAttivi"},
+                    function (data) {
+                        self.docenti_attivi=data
                     }
                 )
             },
@@ -1695,6 +1715,63 @@
 
             },
 
+
+            cancela_professore:async function(doc){
+                var self=this
+                let esito
+                $.get("apiUtente",{path: "deleteDocente",mail:doc},
+                    function (data) {
+
+
+                    }
+                ).then(this.get_docenti_attivi)
+
+            },
+            registra_professore:async function(m,p,n,c){
+                var self=this
+                $.get("apiUtente",{path: "insertDocente",mail:m,pass:p,nome:n,cognome:c},
+                    function (data) {
+                        function clearInput() {
+                            document.getElementById("nome_d").value=''
+                            document.getElementById("cognome_d").value=''
+                            document.getElementById("mail_d").value=''
+                            document.getElementById("pass_d").value=''
+
+                        }
+
+                        if (data['registration_state']==='true'){
+                            clearInput()
+                            this.get_docenti_attivi
+
+                        }
+                        else if (data['registration_state']==='exists'){
+                            self.doc_insert_label='Mail gia nel sistema'
+                        }
+                        else {
+                            self.doc_insert_label='Errore generico'
+                        }
+
+                    }
+                ).then(this.get_docenti_attivi)
+                this.get_docenti_attivi
+
+            },
+            get_nome_d: function (){
+                return $("#nome_d").val();
+
+            },
+            get_cognome_d: function (){
+                return $("#cognome_d").val();
+
+            },
+            get_mail_d: function (){
+                return $("#mail_d").val();
+
+            },
+            get_pass_d: function (){
+                return $("#pass_d").val();
+
+            },
 
 
             filtra_lezioni:function (){

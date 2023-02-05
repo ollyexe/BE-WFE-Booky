@@ -52,6 +52,7 @@ body {
     color: #fff;
 }
 
+
 .navbar .navbar-nav .nav-link {
     padding: 0.6em;
 }
@@ -568,11 +569,10 @@ body {
     color: #f05462;
 }
 .container-admin {
-    position: absolute;
+    position: fixed;
     right: 0;
-    width: 80vw;
-    height: 92vh;
-
+    width: 100vw;
+    height: 62vh;
     flex: 3;
     display: flex;
     justify-content: center;
@@ -580,9 +580,8 @@ body {
 }
 .container-admin .content-admin {
     position: relative;
-    margin-top: 5vh;
+    margin-top: 4vh;
     min-height: 90vh;
-
 }
 .container-admin .content-admin .cards-admin {
     padding: 20px 15px;
@@ -704,7 +703,7 @@ body {
     width: 100%;
     height: 100vh;
     background-size: 100% 110vh;
-    position: relative;
+    position: fixed !important;
     background-repeat: no-repeat;
     padding: 0;
     margin: 0;
@@ -733,7 +732,7 @@ body {
 }
 .form-help{
     display: flex;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     margin-left: 50%;

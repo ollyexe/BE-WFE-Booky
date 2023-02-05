@@ -270,23 +270,22 @@ public class Dao {
     }
 
 
-    public boolean insertUtente(Utente u) {
+    public boolean insertUtente(String email,String password,String nome,String cognome) {
         Connection con = null;
 
         try {
 
             con = Dao.getConnection();
-            if(utenteExists(u.getEmail())){
+            if(utenteExists(email)){
                 throw new Error("Utente.insertUser.error():User with this mail already exists");
 
             }
             assert con != null;
-            PreparedStatement prs = con.prepareStatement("INSERT INTO utente (ID, Email, Password, Nome, Cognome, Ruolo, PF, Stelle,Attivo) VALUES (NULL, ?,?,?,?,?, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAbBB_oglMX609dUtMkvQcL3nmKuqOQmVfR2VIj0he6Q&s', '0','true');");
-            prs.setString(1, u.getEmail());
-            prs.setString(2, encryptMD5(u.getPassword()));
-            prs.setString(3, u.getNome());
-            prs.setString(4, u.getCognome());
-            prs.setString(5, u.getRuolo());
+            PreparedStatement prs = con.prepareStatement("INSERT INTO utente (ID, Email, Password, Nome, Cognome, Ruolo, PF, Stelle,Attivo) VALUES (NULL, ?,?,?,?,'utente', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAbBB_oglMX609dUtMkvQcL3nmKuqOQmVfR2VIj0he6Q&s', '0','true');");
+            prs.setString(1, email);
+            prs.setString(2, encryptMD5(password));
+            prs.setString(3, nome);
+            prs.setString(4, cognome);
             prs.executeUpdate();
 
 
@@ -300,7 +299,68 @@ public class Dao {
 
         }
 
-        return utenteExists(u.getEmail());
+        return utenteExists(email);
+    }
+    public ArrayList<Utente> getDocentiAttivi(){
+        Connection con = null;
+        ArrayList<Utente> docenti = new ArrayList<>();
+        try {
+            con = Dao.getConnection();
+            assert con != null;
+            Statement st = con.createStatement();
+
+            ResultSet rs = st.executeQuery("Select * From utente u where Ruolo='docente' and Attivo=true;");
+
+            while (rs.next()) {
+
+                Utente u = new Utente(rs.getInt("ID"), rs.getString("Email"), rs.getString("Password"),rs.getString("Nome"),rs.getString("Cognome"),rs.getString("Ruolo"),rs.getString("PF"),rs.getDouble("Stelle"), rs.getString("Attivo"));
+                docenti.add(u);
+            }
+
+            System.out.println("Successful Dump getAllProfessori");
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            assert con != null;
+            closeCon(con);
+
+        }
+
+
+        return docenti;
+    }
+    public boolean insertDocente(String email,String password,String nome,String cognome) {
+        Connection con = null;
+
+        try {
+
+            con = Dao.getConnection();
+            if(utenteExists(email)){
+                throw new Error("Utente.insertUser.error():User with this mail already exists");
+
+            }
+            assert con != null;
+            PreparedStatement prs = con.prepareStatement("INSERT INTO utente (ID, Email, Password, Nome, Cognome, Ruolo, PF, Stelle,Attivo) VALUES (NULL, ?,?,?,?,'docente', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAbBB_oglMX609dUtMkvQcL3nmKuqOQmVfR2VIj0he6Q&s', '0','true');");
+            prs.setString(1, email);
+            prs.setString(2, encryptMD5(password));
+            prs.setString(3, nome);
+            prs.setString(4, cognome);
+            prs.executeUpdate();
+
+
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            assert con != null;
+            closeCon(con);
+
+        }
+
+        return utenteExists(email);
     }
 
 
@@ -337,7 +397,7 @@ public class Dao {
     }
 
 
-    public  boolean deleteUtente(String email) {
+    public  boolean deleteDocente(String email) {
         Connection con = null;
 
         try {
@@ -348,8 +408,8 @@ public class Dao {
 
 
             assert con != null;
-            PreparedStatement prs = con.prepareStatement("UPDATE utente SET Attivo = 'false' WHERE utente.Email = ? AND Ruolo!='docente'AND Ruolo!='admin';");
-            prs.setString(1, email);
+            PreparedStatement prs = con.prepareStatement("call deleteDocente(?);");
+            prs.setInt(1, Dao.getIDbyUtente(email));
 
 
             prs.executeUpdate();
