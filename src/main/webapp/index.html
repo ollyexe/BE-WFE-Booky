@@ -1107,15 +1107,94 @@
 
                 </div>
 
+            <div v-if="d_corso" class="body-admin" id="inserimento corsi">
+                <div class="container-admin">
+
+                    <div class="content-admin">
+                        <div class="content-2-admin">
+                            <div class="book_lesson">
+                                <div class="title-admin">
+                                    <h2>Corsi</h2>
+                                </div>
+                                <table>
+                                    <tr>
+                                        <th class="th-admin">Nome</th>
+                                    </tr>
+                                    <tr v-for="cor in corsi_attivi">
+                                        <td class="td-admin">{{cor}}</td>
+                                        <th>
+                                            <button type="button"  @click="cancella_corso([''])" class="btn btn-sm btn-danger">
+                                                Elimina
+                                            </button>
+                                        </th>
+                                    </tr>
+                                </table>
+                            </div>
+                            <!-- <div class="new-students">
+                                  <div class="title-admin">
+                                      <h2>Registra Corso</h2>
+                                  </div>
+                                  <div class="form-admin">
+                                      <div class="input-group mb-3">
+
+                                          <input type="text" class="form-control" placeholder="Nome" aria-label="Username" id="nome_d" aria-describedby="basic-addon1">
+                                      </div>
+                                      <div class="input-group mb-3">
+
+                                          <input type="text" class="form-control" placeholder="Cognome" aria-label="Cognome" id="cognome_d" aria-describedby="basic-addon1">
+                                      </div>
+                                      <div class="input-group mb-3">
+                                          <input type="text" class="form-control" placeholder="Email" @change="doc_insert_label=''" aria-label="Username" id="mail_d" aria-describedby="basic-addon1">
+                                      </div>
+                                      <div class="input-group mb-3">
+
+                                          <input type="text" class="form-control" placeholder="Password" aria-label="Username" id="pass_d" aria-describedby="basic-addon1">
+                                      </div>
+
+                                      <button @click="registra_professore(get_mail_d,get_pass_d,get_nome_d,get_cognome_d)" class="login_button"  value="Registra" type="button" style="margin-top: 30px">Registra</button>
+
+                                  </div>
+                                  <div >
+                                      <a  class="text-danger"  style="text-align: center;text-decoration: none" >{{doc_insert_label}}</a>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>-->
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        </div>
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
         </div>
-
-
-
-
 
         <div v-if="role===-1" id="login_page" class="box__p">
             <div class="container__p">
@@ -1149,7 +1228,15 @@
             </div>
         </div>
 
-    </div>
+        </div>
+
+
+
+
+
+
+
+
 
 
 
@@ -1214,7 +1301,9 @@
                cognome_d:'',
                mail_d:'',
                pass_d:'',
-               docenti_attivi:''
+               docenti_attivi:'',
+
+               corsi_attivi:'',
 
            }
 
@@ -1224,6 +1313,7 @@
             this.get_all_professori()
             this.get_all_materie()
             this.get_docenti_attivi()
+            this.get_corsi_attivi()
             await this.on_load_login()
 
 
@@ -1597,6 +1687,21 @@
                     }
                 )
             },
+
+
+            get_corsi_attivi: async function () {
+                var self=this
+
+                await $.get("apiCorso",{path: "getAllCorsi"},
+                    function (data) {
+                        self.corsi_attivi=data['corsi']
+                    }
+                )
+            },
+
+
+
+
             get_all_materie: async function () {
 
                 var self=this
@@ -1716,6 +1821,7 @@
             },
 
 
+
             cancela_professore:async function(doc){
                 var self=this
                 let esito
@@ -1756,6 +1862,8 @@
                 this.get_docenti_attivi
 
             },
+
+
             get_nome_d: function (){
                 return $("#nome_d").val();
 
