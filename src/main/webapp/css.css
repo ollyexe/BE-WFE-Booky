@@ -397,7 +397,7 @@ body {
 }
 
 .team .member .teampic {
-    overflow: hidden;
+
     width: 180px;
     border-radius: 50%;
 }
@@ -569,7 +569,7 @@ body {
     color: #f05462;
 }
 .container-admin {
-    position: fixed;
+    position: absolute !important;
     right: 0;
     width: 100vw;
     height: 62vh;
@@ -579,7 +579,7 @@ body {
     z-index: 1;
 }
 .container-admin .content-admin {
-    position: relative;
+    position: absolute;
     margin-top: 4vh;
     min-height: 90vh;
 }

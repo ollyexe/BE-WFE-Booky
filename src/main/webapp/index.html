@@ -23,7 +23,7 @@
     <div id="app" >
 
         <div v-if="role===1||role===0">
-            <div v-if="role>-1" id="nav_Bar">
+            <div id="nav_Bar">
                 <nav class="navbar navbar-expand-lg navbar-light bg-navBar">
                 <a v-if="role===1" class="navbar-brand text-white" >Benvenut* {{utente['nome']}}</a>
                     <a v-if="role===0" class="navbar-brand text-white" href="#">Benvenut* Guest</a>
@@ -40,7 +40,7 @@
                             <a v-if="role===0" @click="go_to_loginpage" class="nav-link" href="#">Login</a>
                         </li>
 
-                        <li class="dropdown nav-item">
+                        <li class="dropdown nav-item" v-if="role===1">
                             <a href="#" class=" nav-link " data-toggle="dropdown"  aria-expanded="false">Tue lezione <i class="fa-solid fa-2xs fa-caret-square-down"></i></a>
                             <ul class="dropdown-menu bg-navBar" role="menu">
                                 <li class="nav-item">
@@ -745,7 +745,7 @@
         <div v-if="role===2">
             <div v-if="role===2" id="nav_Bar_admin">
                 <nav class="navbar navbar-expand-lg navbar-light bg-navBar">
-                    <a class="navbar-brand" href="#"></a>
+                    <a class="navbar-brand text-white" href="#"> Benvenut* Admin</a>
                     <button class="navbar-toggler float-right collapsed" type="button" data-toggle="collapse" data-target="#navbarNav_admin" aria-controls="navbarNav_admin" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon "></span>
                     </button>
@@ -800,26 +800,26 @@
                         <div class="cards-admin">
                             <div class="card-admin">
                                 <div class="box-admin">
-                                    <h1 class="h1-admin">10</h1>
+                                    <h1 class="h1-admin">{{dash_numb['tot']}}</h1>
                                     <h3 class="h3-admin">Lezioni Totali</h3>
                                 </div>
 
                             </div>
                             <div class="card-admin">
                                 <div class="box-admin">
-                                    <h1 class="h1-admin">5</h1>
+                                    <h1 class="h1-admin">{{dash_numb['pren']}}</h1>
                                     <h3 class="h3-admin">Lezioni Prenotate</h3>
                                 </div>
                             </div>
                             <div class="card-admin">
                                 <div class="box-admin">
-                                    <h1 class="h1-admin">5</h1>
+                                    <h1 class="h1-admin">{{dash_numb['libere']}}</h1>
                                     <h3 class="h3-admin">Lezioni Disponibili</h3>
                                 </div>
                             </div>
                             <div class="card-admin">
                                 <div class="box-admin">
-                                    <h1 class="h1-admin">20</h1>
+                                    <h1 class="h1-admin">{{dash_numb['stud']}}</h1>
                                     <h3 class="h3-admin">Numero Studenti</h3>
                                 </div>
                             </div>
@@ -831,76 +831,22 @@
                                 </div>
                                 <table class="table-admin">
                                     <tr>
-                                        <th class="th-admin">Studente</th>
                                         <th class="th-admin">Professore</th>
+                                        <th class="th-admin">Materia</th>
+                                        <th class="th-admin">Studente</th>
                                         <th class="th-admin">Data</th>
                                         <th class="th-admin">Ora</th>
                                     </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome Cognome</td>
-                                        <td class="td-admin">Prof. Nome Cognome</td>
-                                        <td class="td-admin">2023-02-18</td>
-                                        <td class="td-admin">18:00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome Cognome</td>
-                                        <td class="td-admin">Prof. Nome Cognome</td>
-                                        <td class="td-admin">2023-02-18</td>
-                                        <td class="td-admin">18:00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome Cognome</td>
-                                        <td class="td-admin">Prof. Nome Cognome</td>
-                                        <td class="td-admin">2023-02-18</td>
-                                        <td class="td-admin">18:00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome Cognome</td>
-                                        <td class="td-admin">Prof. Nome Cognome</td>
-                                        <td class="td-admin">2023-02-18</td>
-                                        <td class="td-admin">18:00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome Cognome</td>
-                                        <td class="td-admin">Prof. Nome Cognome</td>
-                                        <td class="td-admin">2023-02-18</td>
-                                        <td class="td-admin">18:00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome Cognome</td>
-                                        <td class="td-admin">Prof. Nome Cognome</td>
-                                        <td class="td-admin">2023-02-18</td>
-                                        <td class="td-admin">18:00</td>
+                                    <tr v-for="lex in lex_prenotate_a">
+                                        <td class="td-admin">Prof. {{lex['nome_docente']}} {{lex['cognome_docente']}}</td>
+                                        <td class="td-admin">{{lex['nome_corso']}}</td>
+                                        <td class="td-admin">{{lex['nome_utente']}} {{lex['cognome_utente']}}</td>
+                                        <td class="td-admin">{{lex['data']}}</td>
+                                        <td class="td-admin">{{lex['ora']}}</td>
                                     </tr>
                                 </table>
                             </div>
-                            <div class="new-students">
-                                <div class="title-admin">
-                                    <h2 class="h2-admin">Nuovi Studenti</h2>
-                                </div>
-                                <table class="table-admin">
-                                    <tr>
-                                        <th class="td-admin">Nome</th>
-                                        <th class="th-admin">Cognome</th>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome</td>
-                                        <td class="td-admin">Cognome</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome</td>
-                                        <td class="td-admin">Cognome</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome</td>
-                                        <td class="td-admin">Cognome</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome</td>
-                                        <td class="td-admin">Cognome</td>
-                                    </tr>
-                                </table>
-                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -909,7 +855,7 @@
 
                 <div v-if="d_storici" class="body-admin" id="storici">
 
-                <div class="container-admin">
+                <div class="container-admin" style="position: absolute;">
 
                     <div class="content-admin">
                         <div class="content-2-admin">
@@ -924,11 +870,11 @@
                                         <th class="th-admin">Data</th>
                                         <th class="th-admin">Ora</th>
                                     </tr>
-                                    <tr v-for="n in 10">
-                                        <td class="td-admin">Prof. Nome Cognome</td>
-                                        <td class="td-admin">Materia</td>
-                                        <td class="td-admin">2023-02-18</td>
-                                        <td class="td-admin">18:00</td>
+                                    <tr v-for="lex in lex_libere_a">
+                                        <td class="td-admin">Prof. {{lex['nome_docente']}} {{lex['cognome_docente']}}</td>
+                                        <td class="td-admin">{{lex['nome_corso']}}</td>
+                                        <td class="td-admin">{{lex['data']}}</td>
+                                        <td class="td-admin">{{lex['ora']}}</td>
                                     </tr>
 
                                 </table>
@@ -947,12 +893,12 @@
                                         <th class="th-admin">Utente</th>
 
                                     </tr>
-                                    <tr v-for="n in 5">
-                                        <td class="td-admin">>Prof.Nome Cognome</td>
-                                        <td class="td-admin">Materia</td>
-                                        <td class="td-admin">2023-02-18</td>
-                                        <td class="td-admin">18:00</td>
-                                        <td class="td-admin">Mario Rossi</td>
+                                    <tr v-for="lex in lex_prenotate_a">
+                                        <td class="td-admin">Prof. {{lex['nome_docente']}} {{lex['cognome_docente']}}</td>
+                                        <td class="td-admin">{{lex['nome_corso']}}</td>
+                                        <td class="td-admin">{{lex['data']}}</td>
+                                        <td class="td-admin">{{lex['ora']}}</td>
+                                        <td class="td-admin">{{lex['nome_utente']}} {{lex['cognome_utente']}}</td>
                                     </tr>
 
                                 </table>
@@ -971,13 +917,13 @@
                                         <th class="th-admin">Stelle</th>
 
                                     </tr>
-                                    <tr v v-for="n in 10">
-                                        <td class="td-admin">Prof. Nome Cognome</td>
-                                        <td class="td-admin">Materia</td>
-                                        <td class="td-admin">2023-02-18</td>
-                                        <td class="td-admin">18:00</td>
-                                        <td class="td-admin">Mario Rossi</td>
-                                        <th class="th-admin">Stelle</th>
+                                    <tr v v-for="lex in lex_concluse_a">
+                                        <td class="td-admin">Prof. {{lex['nome_docente']}} {{lex['cognome_docente']}}</td>
+                                        <td class="td-admin">{{lex['nome_corso']}}</td>
+                                        <td class="td-admin">{{lex['data']}}</td>
+                                        <td class="td-admin">{{lex['ora']}}</td>
+                                        <td class="td-admin">{{lex['nome_utente']}} {{lex['cognome_utente']}}</td>
+                                        <th class="th-admin">{{lex['stelle']}}</th>
                                     </tr>
 
 
@@ -989,60 +935,63 @@
                 </div>
                 </div>
 
-                <div v-if="d_docenza" class="body-admin" id="inserimento studente">
+               <div v-if="d_docenza" class="body-admin" id="inserimento docenza">
                 <div class="container-admin">
 
                     <div class="content-admin">
                         <div class="content-2-admin">
                             <div class="book_lesson">
                                 <div class="title-admin">
-                                    <h2>Studenti</h2>
+                                    <h2>Docenze</h2>
                                 </div>
                                 <table>
                                     <tr>
                                         <th class="th-admin">Nome</th>
                                         <th class="th-admin">Cognome</th>
-                                        <th class="th-admin">Lezioni</th>
+                                        <th class="th-admin">Corso</th>
+                                        <th class="th-admin">Data Inizio</th>
+                                        <th class="th-admin">Data Fine</th>
                                     </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome</td>
-                                        <td class="td-admin">Cognome</td>
-                                        <td class="td-admin">10</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome</td>
-                                        <td class="td-admin">Cognome</td>
-                                        <td class="td-admin">2</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome</td>
-                                        <td class="td-admin">Cognome</td>
-                                        <td class="td-admin">5</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome</td>
-                                        <td class="td-admin">Cognome</td>
-                                        <td class="td-admin">0</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome</td>
-                                        <td class="td-admin">Cognome</td>
-                                        <td class="td-admin">3</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="td-admin">Nome</td>
-                                        <td class="td-admin">Cognome</td>
-                                        <td class="td-admin">7</td>
+                                    <tr v-for="doce in docenze_attive">
+                                        <td class="td-admin">{{doce['nome_docente']}}</td>
+                                        <td class="td-admin">{{doce['cognome_docente']}}</td>
+                                        <td class="td-admin">{{doce['corso']}}</td>
+                                        <td class="td-admin">{{doce['data_start']}}</td>
+                                        <td class="td-admin">{{doce['Data_end']}}</td>
+
+                                        <th>
+                                            <button type="button"  @click="delete_docenza(doce['docente_id'],doce['corso_id'],doce['data_start']).then(get_docenze_attive)" class="btn btn-sm btn-danger">
+                                                Elimina
+                                            </button>
+                                        </th>
                                     </tr>
                                 </table>
                             </div>
+                            <div class="new-students">
+                                <div class="title-admin">
+                                    <h2>Registra Docenza</h2>
+                                </div>
+                                <div class="form-admin">
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" placeholder="Id_Corso"  aria-label="nome" id="Id_Corso" aria-describedby="basic-addon1">
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" placeholder="Id_Professore" aria-label="nome" id="Id_Professore" aria-describedby="basic-addon1">
+                                    </div>
+                                    <label for="start">Data Inizio:</label>
+                                    <input type="date" id="start" required pattern="\d{2}-\d{2}-\d{4}">
+                                    <label for="start">Data Fine:</label>
+                                    <input type="date" id="end" required pattern="\d{2}-\d{2}-\d{4}">
+
+                                    <button @click="registra_docenza(get_id_prof_doce,get_id_corso_doce,get_data_inzio,get_data_fine).then(get_docenze_attive)" class="login_button"  value="Registra" type="button" style="margin-top: 30px">Registra</button>
+
+                                </div>
                         </div>
                     </div>
                 </div>
+                </div></div>
 
-                </div>
-
-                 <div v-if="d_docente" class="body-admin" id="inserimento docenti">
+                <div v-if="d_docente" class="body-admin" id="inserimento docenti">
                 <div class="container-admin">
 
                     <div class="content-admin">
@@ -1107,7 +1056,7 @@
 
                 </div>
 
-            <div v-if="d_corso" class="body-admin" id="inserimento corsi">
+                <div v-if="d_corso" class="body-admin" id="inserimento corsi">
                 <div class="container-admin">
 
                     <div class="content-admin">
@@ -1123,74 +1072,30 @@
                                     <tr v-for="cor in corsi_attivi">
                                         <td class="td-admin">{{cor}}</td>
                                         <th>
-                                            <button type="button"  @click="cancella_corso([''])" class="btn btn-sm btn-danger">
+                                            <button type="button"  @click="cancella_corso(cor)" class="btn btn-sm btn-danger">
                                                 Elimina
                                             </button>
                                         </th>
                                     </tr>
                                 </table>
                             </div>
-                            <!-- <div class="new-students">
-                                  <div class="title-admin">
-                                      <h2>Registra Corso</h2>
-                                  </div>
-                                  <div class="form-admin">
-                                      <div class="input-group mb-3">
+                            <div class="new-students">
+                                <div class="title-admin">
+                                    <h2>Registra Corso</h2>
+                                </div>
+                                <div class="form-admin">
+                                    <div class="input-group mb-3">
 
-                                          <input type="text" class="form-control" placeholder="Nome" aria-label="Username" id="nome_d" aria-describedby="basic-addon1">
-                                      </div>
-                                      <div class="input-group mb-3">
-
-                                          <input type="text" class="form-control" placeholder="Cognome" aria-label="Cognome" id="cognome_d" aria-describedby="basic-addon1">
-                                      </div>
-                                      <div class="input-group mb-3">
-                                          <input type="text" class="form-control" placeholder="Email" @change="doc_insert_label=''" aria-label="Username" id="mail_d" aria-describedby="basic-addon1">
-                                      </div>
-                                      <div class="input-group mb-3">
-
-                                          <input type="text" class="form-control" placeholder="Password" aria-label="Username" id="pass_d" aria-describedby="basic-addon1">
-                                      </div>
-
-                                      <button @click="registra_professore(get_mail_d,get_pass_d,get_nome_d,get_cognome_d)" class="login_button"  value="Registra" type="button" style="margin-top: 30px">Registra</button>
-
-                                  </div>
-                                  <div >
-                                      <a  class="text-danger"  style="text-align: center;text-decoration: none" >{{doc_insert_label}}</a>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>-->
+                                        <input type="text" class="form-control" placeholder="Nome" aria-label="nome" id="nome_c" aria-describedby="basic-addon1">
+                                    </div>
 
 
+                                    <button @click="registra_corso(get_nome_c)" class="login_button"  value="Registra" type="button" style="margin-top: 30px">Registra</button>
 
+                                </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                            </div>
                         </div>
-
-
-
-
-
-
                     </div>
                 </div>
             </div>
@@ -1241,6 +1146,7 @@
 
 
 <script>
+
 
 
     var app = new Vue({
@@ -1294,6 +1200,7 @@
                sel_prof:'',
                search_button_is_hiden:false,
                doc_insert_label:'',
+               cor_insert_label:'',
 
 
 
@@ -1302,8 +1209,12 @@
                mail_d:'',
                pass_d:'',
                docenti_attivi:'',
-
                corsi_attivi:'',
+               docenze_attive:'',
+               lex_libere_a:'',
+               lex_prenotate_a:'',
+               lex_concluse_a:'',
+               dash_numb:''
 
            }
 
@@ -1314,6 +1225,11 @@
             this.get_all_materie()
             this.get_docenti_attivi()
             this.get_corsi_attivi()
+            this.get_docenze_attive()
+            this.get_lezioni_libere_a()
+            this.get_lezioni_prenotate_a()
+            this.get_lezioni_concluse_a()
+            await this.get_dash_numb()
             await this.on_load_login()
 
 
@@ -1546,6 +1462,8 @@
                 this.d_corso=false;
                 this.d_docenza=false
                 this.d_storici=false
+                this.get_lezioni_prenotate_a()
+                this.get_dash_numb()
 
                 document.title='Home Admin'
 
@@ -1677,27 +1595,7 @@
                     }
                 )
             },
-            get_docenti_attivi: async function () {
 
-                var self=this
-
-                await $.get("apiUtente",{path: "getDocentiAttivi"},
-                    function (data) {
-                        self.docenti_attivi=data
-                    }
-                )
-            },
-
-
-            get_corsi_attivi: async function () {
-                var self=this
-
-                await $.get("apiCorso",{path: "getAllCorsi"},
-                    function (data) {
-                        self.corsi_attivi=data['corsi']
-                    }
-                )
-            },
 
 
 
@@ -1822,6 +1720,138 @@
 
 
 
+            get_lezioni_libere_a: async function () {
+                var self=this
+                await $.get("apiLezione",{path: "getLezioniLibere"},
+                    function (data) {
+                        self.lex_libere_a=data
+                    }
+                )
+            },
+            get_lezioni_prenotate_a: async function () {
+                var self=this
+                await $.get("apiLezione",{path: "getLezioniPrenotate"},
+                    function (data) {
+                        self.lex_prenotate_a=data
+                    }
+                )
+            },
+            get_lezioni_concluse_a: async function () {
+                var self=this
+                await $.get("apiLezione",{path: "getLezioniConcluse"},
+                    function (data) {
+                        self.lex_concluse_a=data
+                    }
+                )
+            },
+            get_dash_numb: async function () {
+                var self=this
+                 $.get("apiLezione",{path: "dashBoardNumbers"},
+                    function (data) {
+                        self.dash_numb=data
+                    }
+                )
+                console.log(this.dash_numb)
+            },
+
+
+
+            get_docenze_attive: async function () {
+
+                var self=this
+
+                 $.get("apiDocenza",{path: "getAllDocenza"},
+                    function (data) {
+                        self.docenze_attive=data
+                    }
+                )
+            },
+            registra_docenza:async function(p,c,s,e){
+                var self=this
+                $.get("apiDocenza",{path: "insertDocenza",prof:p,corso:c,start:s,end:e},
+                    function (data) {
+                        function clearInput() {
+                            document.getElementById("start").value=''
+                            document.getElementById("end").value=''
+                            document.getElementById("Id_Professore").value=''
+                            document.getElementById("Id_Corso").value=''
+
+                        }
+
+                        if (data['registration_state']==='true'){
+                            clearInput()
+                            this.get_docenze_attive
+
+                        }
+                        else if (data['registration_state']==='exists'){
+                            self.doc_insert_label='Mail gia nel sistema'
+                        }
+                        else {
+                            self.doc_insert_label='Errore generico'
+                        }
+
+                    }
+                ).then(this.get_docenze_attive)
+                this.get_docenze_attive()
+
+            },
+            delete_docenza:async function(p,c,s){
+                var self=this
+                $.get("apiDocenza",{path: "deleteDocenza",prof:p,corso:c,start:s},
+                    function (data) {
+                        function clearInput() {
+                            document.getElementById("start").value=''
+                            document.getElementById("end").value=''
+                            document.getElementById("Id_Professore").value=''
+                            document.getElementById("Id_Corso").value=''
+
+                        }
+
+                        if (data['registration_state']==='true'){
+                            clearInput()
+                            this.get_docenze_attive
+
+                        }
+                        else if (data['registration_state']==='exists'){
+                            self.doc_insert_label='Mail gia nel sistema'
+                        }
+                        else {
+                            self.doc_insert_label='Errore generico'
+                        }
+
+                    }
+                ).then(this.get_docenze_attive)
+                this.get_docenze_attive()
+
+            },
+            get_data_inzio: function (){
+                return $("#start").val();
+
+            },
+            get_data_fine: function (){
+                return $("#end").val();
+
+            },
+            get_id_corso_doce: function (){
+                return $("#Id_Corso").val();
+
+            },
+            get_id_prof_doce: function (){
+                return $("#Id_Professore").val();
+
+            },
+
+
+            get_docenti_attivi: async function () {
+
+                var self=this
+
+                await $.get("apiUtente",{path: "getDocentiAttivi"},
+                    function (data) {
+                        self.docenti_attivi=data
+                    }
+                )
+            },
             cancela_professore:async function(doc){
                 var self=this
                 let esito
@@ -1864,10 +1894,43 @@
             },
 
 
+            get_corsi_attivi: async function () {
+                var self=this
+
+                await $.get("apiCorso",{path: "getCorsiAttivi"},
+                    function (data) {
+                        self.corsi_attivi=data['corsi']
+                    }
+                )
+            },
+            registra_corso : async function (name) {
+                var self=this
+
+                $.get("apiCorso",{path: "inserisciCorso",nome:name},
+                    function (data) {
+
+                    }
+                ).then(this.get_corsi_attivi)
+            },
+            cancella_corso : async function (name) {
+                var self=this
+                console.log(name)
+                 $.get("apiCorso",{path: "deleteCorso", nome : name},
+                    function (data) {
+
+                    }
+                ).then(this.get_corsi_attivi)
+            },
+            get_nome_c: function (){
+                return $("#nome_c").val();
+
+            },
+
             get_nome_d: function (){
                 return $("#nome_d").val();
 
             },
+
             get_cognome_d: function (){
                 return $("#cognome_d").val();
 
@@ -2005,6 +2068,8 @@
         },
 
     });
+
+
 
 </script>
 
