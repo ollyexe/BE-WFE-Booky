@@ -2,6 +2,7 @@ package it.unito.booky.api.corso;
 
 
 import java.io.*;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
@@ -36,8 +37,8 @@ public class apiCorso extends HttpServlet {
     private void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        HttpSession s = request.getSession();
         PrintWriter out = response.getWriter();
+
         //System.out.println(request.getParameter("path"));
         response.setContentType("application/json");
 
